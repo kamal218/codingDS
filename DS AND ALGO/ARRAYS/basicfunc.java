@@ -259,7 +259,6 @@ public class basicfunc {
          * display1D(sumZero(10));
          */
         // LEETCODE832
-
         /*
          * int[][] arr={{1,1,0},{1,0,1},{0,0,0}}; display2D(flipAndInvertImage(arr));
          */
@@ -272,9 +271,21 @@ public class basicfunc {
          * int[] arr={3,1,2,4}; display1D(sortArrayByParity(arr));
          */
         // LEETCODE1380
-        int[][] matrix={{7,8},{1,2}};
-        ArrayList<Integer> ans=luckyNumbers(matrix);
-        System.out.println(ans);
+        /*
+         * int[][] matrix = { { 7, 8 }, { 1, 2 } }; ArrayList<Integer> ans =
+         * luckyNumbers(matrix); System.out.println(ans);
+         */
+        // LEETCODE977
+        /*
+         * int[] arr={-4,-3,1,3,5}; display1D(arr);
+         */
+        // LEETCODE 561
+        /*
+         * int[] nums={2,2,4,5,7,8,3,4,5,7}; System.out.println(arrayPairSum(nums));
+         */
+        // LEETCODE 922
+        innt[] arr = { 4, 2, 3, 5 };
+        display1D(arr);
     }
 
     public static ArrayList<Boolean> kidsWithCandies(int[] candies, int extraCandies) {
@@ -500,6 +511,86 @@ public class basicfunc {
             }
         }
         return ans;
+    }
+
+    public static int[] sortedSquares(int[] A) {
+        int[] ans = new int[A.length];
+        int neg = 0, pos = 0, idx = 0;
+        while (pos < A.length && A[pos] < 0) {
+            pos++;
+        }
+        neg = pos - 1;
+        if (neg == -1) {
+            for (int i = 0; i < A.length; i++)
+                ans[i] = A[i] * A[i];
+        } else if (pos == A.length) {
+            for (int i = A.length - 1; i >= 0; i--)
+                ans[A.length - i - 1] = A[i] * A[i];
+        } else {
+
+            while (pos < A.length && neg >= 0) {
+                if (A[pos] * A[pos] > A[neg] * A[neg]) {
+                    ans[idx] = A[neg] * A[neg];
+                    neg--;
+                    idx++;
+                } else if (A[pos] * A[pos] < A[neg] * A[neg]) {
+                    ans[idx] = A[pos] * A[pos];
+                    pos++;
+                    idx++;
+                } else {
+                    ans[idx] = A[pos] * A[pos];
+                    ans[idx + 1] = A[pos] * A[pos];
+                    neg--;
+                    pos++;
+                    idx += 2;
+                }
+            }
+            if (pos == A.length) {
+                while (neg >= 0) {
+                    ans[idx] = A[neg] * A[neg];
+                    idx++;
+                    neg--;
+                }
+            } else if (neg < 0) {
+                while (pos < A.length) {
+                    ans[idx] = A[pos] * A[pos];
+                    pos++;
+                    idx++;
+                }
+            }
+        }
+        return ans;
+    }
+
+    public static int arrayPairSum(int[] nums) {
+        Arrays.sort(nums);
+        int ans = 0;
+        for (int i = 0; i < nums.length; i += 2) {
+            ans += Math.min(nums[i], nums[i + 1]);
+        }
+        return ans;
+    }
+
+    public static int[] sortArrayByParityII(int[] A) {
+        int i = 0;
+        int j = 1;
+        int even = 0;
+        int odd = 0;
+        while (i < A.length && j < A.length) {
+            even = A[i] % 2;
+            odd = A[j] % 2;
+            if (even != 0 && odd == 0) {
+                swapf(A, i, j);
+                i += 2;
+                j += 2;
+            } else if (even != 0) {
+                j += 2;
+            } else {
+                i += 2;
+            }
+
+        }
+        return A;
     }
 
     // *****************************************************************//
