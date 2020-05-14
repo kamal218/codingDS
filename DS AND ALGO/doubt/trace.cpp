@@ -25,13 +25,13 @@ int r,c,i,j;
             mat1[i][j]+=mat2[i][j];
     }
     int sum=0;
-     for(i=0;i<mat2.size();i++)
-    {
-        for(j=0;j<mat2[0].size();j++)           //how can we decrease complexity
-            if(i==j)
-            sum=sum+mat1[i][j];
-                
-    }
+     int i=0,j=0;
+     while(i<mat1.size())
+     {
+         sum+=mat2[i][j];       //o(n)
+         i++;
+         j++;
+     }
     cout<<sum;
     return 0;
 }

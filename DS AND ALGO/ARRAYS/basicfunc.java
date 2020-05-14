@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -9,8 +10,8 @@ public class basicfunc {
     }
 
     public static void solve() {
-        basicf();
-        // LeetCode();
+        // basicf();
+        LeetCode();
     }
 
     /**********************************************************************************/
@@ -235,13 +236,50 @@ public class basicfunc {
          * int[] arr={1,2,3,4}; int[] ans=decompressRLElist(arr); display1D(ans);
          */
         // LEETCODE 1295
-        int[] nums={1,154,0,22,44,7893};
-        System.out.println(findNumbers(nums));
+        /*
+         * int[] nums = { 1, 154, 0, 22, 44, 7893 };
+         * System.out.println(findNumbers(nums));
+         */
+        // LEETCODE 1266
+        /*
+         * int[][] arr = { { 1, 1 }, { 3, 4 }, { -1, 0 } };
+         * System.out.println(minTimeToVisitAllPoints(arr));
+         */
+        // LEETCODE 1252
+        /*
+         * int[][] indices = { { 0, 1 }, { 1, 0 } }; System.out.println((oddCells(2, 3,
+         * indices)));
+         */
+        // LEETCODE 1299
+        /*
+         * int[] arr = { 88, 5, 6, 99, 4, 2 }; display1D(replaceElements(arr));
+         */
+        // LEETCODE 1304
+        /*
+         * display1D(sumZero(10));
+         */
+        // LEETCODE832
+
+        /*
+         * int[][] arr={{1,1,0},{1,0,1},{0,0,0}}; display2D(flipAndInvertImage(arr));
+         */
+        // LEETCODE 1351
+        /*
+         * int[][] grid={{3,2},{1,0}}; System.out.println(countNegatives(grid));
+         */
+        // LEETCODE 905
+        /*
+         * int[] arr={3,1,2,4}; display1D(sortArrayByParity(arr));
+         */
+        // LEETCODE1380
+        int[][] matrix={{7,8},{1,2}};
+        ArrayList<Integer> ans=luckyNumbers(matrix);
+        System.out.println(ans);
     }
 
     public static ArrayList<Boolean> kidsWithCandies(int[] candies, int extraCandies) {
         ArrayList<Boolean> ans = new ArrayList<Boolean>();
-        int max_ = -Integer.MIN_VALUE;
+        int max_ = Integer.MIN_VALUE;
         for (int ele : candies) {
             if (ele > max_)
                 max_ = ele;
@@ -288,15 +326,181 @@ public class basicfunc {
         }
         return dig;
     }
+
     // public int findNumbers(int[] nums) {
-    //     int ans=0;
-    //     for(int ele:nums)
-    //     {
-    //         if((ele>=10 && ele<=99) || (ele>=1000 && ele<=9999)  || ele==100000)
-    //             ans++;
-    //     }
-    //     return ans;
+    // int ans=0;
+    // for(int ele:nums)
+    // {
+    // if((ele>=10 && ele<=99) || (ele>=1000 && ele<=9999) || ele==100000)
+    // ans++;
     // }
+    // return ans;
+    // }
+    public static int minTimeToVisitAllPoints(int[][] points) {
+        if (points.length == 0)
+            return 0;
+        int ans = 0;
+
+        for (int i = 1; i < points.length; i++) {
+            ans += Math.max(Math.abs(points[i][0] - points[i - 1][0]), Math.abs(points[i][1] - points[i - 1][1]));
+        }
+        return ans;
+    }
+
+    public static int oddCells(int n, int m, int[][] indices) {
+        Boolean[] isevencol = new Boolean[m];
+        Boolean[] isevenrow = new Boolean[n];
+        Arrays.fill(isevenrow, false);
+        Arrays.fill(isevencol, false);
+        int hitrow = 0;
+        int ans = 0;
+        for (int i = 0; i < indices.length; i++) {
+            if (!isevenrow[indices[i][0]]) {
+                ans += m;
+                hitrow++;
+                isevenrow[indices[i][0]] = true;
+            } else {
+                ans -= m;
+                hitrow--;
+                isevenrow[indices[i][0]] = false;
+            }
+        }
+        for (int i = 0; i < indices.length; i++) {
+            if (!isevencol[indices[i][1]]) {
+                ans += (n - hitrow) - hitrow;
+                isevencol[indices[i][1]] = true;
+            } else {
+                ans = ans - (n - hitrow) + hitrow;
+                isevencol[indices[i][1]] = false;
+            }
+        }
+        return ans;
+
+    }
+
+    public static int[] replaceElements(int[] arr) {
+        int max_ = Integer.MIN_VALUE;
+        int[] ans = new int[arr.length];
+        ans[arr.length - 1] = -1;
+        max_ = Math.max(max_, arr[arr.length - 1]);
+        for (int i = arr.length - 2; i >= 0; i--) {
+            ans[i] = max_;
+            max_ = Math.max(max_, arr[i]);
+        }
+        return ans;
+    }
+
+    public static int[] sumZero(int n) {
+        int[] ans = new int[n];
+        int i = 0;
+        for (i = 0; i < (n / 2); i++) {
+            ans[i] = -((n / 2) - i);
+        }
+        int j = i - 1;
+        if (n % 2 != 0) {
+            ans[i] = 0;
+            i++;
+        }
+
+        while (j >= 0) {
+            ans[i] = -(ans[j]);
+            j--;
+            i++;
+        }
+        return ans;
+    }
+
+    public static int[][] flipAndInvertImage(int[][] A) {
+        int si = 0;
+        int ei = A[0].length - 1;
+        for (int[] arr : A) {
+            si = 0;
+            ei = A[0].length - 1;
+            while (si <= ei) {
+                if (arr[si] == arr[ei]) {
+                    if (si == ei) {
+                        arr[si] = (arr[si] == 0 ? 1 : 0);
+                    } else {
+                        arr[si] = (arr[si] == 0 ? 1 : 0);
+                        arr[ei] = (arr[ei] == 0 ? 1 : 0);
+                    }
+                }
+                si++;
+                ei--;
+            }
+        }
+        return A;
+
+    }
+
+    public static int countNegatives(int[][] grid) {
+        int ans = 0;
+        int si = 0;
+        int ei = 0, mid = 0;
+        int row = grid.length;
+        int col = grid[0].length;
+        for (int i = 0; i < grid.length; i++) {
+            if (grid[i][0] < 0) {
+                ans += (row - i) * col;
+                break;
+            } else if (grid[i][col - 1] >= 0) {
+                continue;
+            } else {
+                si = 0;
+                ei = col - 1;
+                while (si <= ei) {
+                    mid = (si + ei) / 2;
+                    if (grid[i][mid] < 0)
+                        ei = mid - 1;
+                    else
+                        si = mid + 1;
+                }
+                ans += (col - (si));
+            }
+        }
+        return ans;
+    }
+
+    public static int[] sortArrayByParity(int[] A) {
+        int i = 0, j = 0;
+        for (int ele : A) {
+            if ((A[j] & 1) == 0) {
+                swapf(A, i, j);
+                i++;
+                j++;
+            } else {
+                j++;
+            }
+        }
+        return A;
+    }
+
+    public static ArrayList<Integer> luckyNumbers(int[][] matrix) {
+        ArrayList<Integer> ans = new ArrayList<Integer>();
+        int row = matrix.length;
+        int col = matrix[0].length;
+        int[] min_row = new int[row];
+        int min_ = 0;
+        for (int i = 0; i < row; i++) {
+            min_ = Integer.MAX_VALUE;
+            for (int j = 0; j < col; j++) {
+                min_ = Math.min(min_, matrix[i][j]);
+            }
+            min_row[i] = min_;
+        }
+        int max_ = Integer.MIN_VALUE;
+        for (int i = 0; i < col; i++) {
+            max_ = Integer.MIN_VALUE;
+            for (int j = 0; j < row; j++) {
+                max_ = Math.max(max_, matrix[j][i]);
+            }
+            for (int k = 0; k < min_row.length; k++) {
+                if (max_ == min_row[k])
+                    ans.add(max_);
+            }
+        }
+        return ans;
+    }
 
     // *****************************************************************//
     // Helper functions
