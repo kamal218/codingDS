@@ -1,5 +1,8 @@
 import java.util.Arrays;
 import java.util.Scanner;
+
+import javax.lang.model.util.ElementScanner6;
+
 import java.util.ArrayList;
 
 public class basicfunc {
@@ -10,11 +13,13 @@ public class basicfunc {
     }
 
     public static void solve() {
-        // basicf();
-        LeetCode();
+        basicf();
+        // LeetCode();
     }
 
-    /**********************************************************************************/
+    /***************************************
+     * BASIC FUNCTIONS IN ARRAY
+     ***************************************/
     public static void basicf() {
         // MIN_MAX
         /*
@@ -37,11 +42,14 @@ public class basicfunc {
         // Matrix
 
         int[][] mat = { { 1, 2, 3 }, { 2, 3, 4 }, { 4, 5, 6 } };
-        int[][] hmat = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
+        // int[][] hmat = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
         // addTwoMatrix(mat, hmat);
         // transposeMatrix(mat);
         // multiplyMatrix(mat, hmat);
-        wavePrint(mat);
+        // wavePrint(mat);
+        spiralPrint(mat);
+        // int[][] mat={{0,0,0,1},{0,1,0,1},{0,0,0,0},{0,0,0,0}};
+        // display1D(exitPoint1(mat));
         // display2D(matrix);
 
     }
@@ -205,7 +213,121 @@ public class basicfunc {
         }
     }
 
-    /***************************************************************************/
+    public static int[] exitPoint(int[][] mat) {
+        int[] ans = new int[2];
+        int row = mat.length, col = mat[0].length, r = 0, c = 0;
+        int[][] dir = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
+        int cdir = 0;
+        while (true) {
+            cdir %= dir.length;
+            if (cdir == 0) {
+                while (mat[r][c] != 1) {
+                    c += dir[cdir][1];
+                    if (c == col) {
+                        ans[0] = r;
+                        ans[1] = c;
+                        return ans;
+                    }
+                }
+                cdir += 1;
+            } else if (cdir == 1) {
+                while (mat[r][c] != 1) {
+                    r += dir[cdir][0];
+                    if (r == row) {
+                        ans[0] = row;
+                        ans[1] = col;
+                        return ans;
+                    }
+                }
+                cdir += 1;
+            } else if (cdir == 2) {
+                while (mat[r][c] != 1) {
+                    c += dir[cdir][1];
+                    if (c == -1) {
+                        ans[0] = row;
+                        ans[1] = col;
+                        return ans;
+                    }
+                }
+                cdir += 1;
+            } else {
+                while (mat[r][c] != 1) {
+                    r -= dir[cdir][1];
+                    if (r == -1) {
+                        ans[0] = row;
+                        ans[1] = col;
+                        return ans;
+                    }
+                }
+                cdir += 1;
+            }
+        }
+    }
+
+    public static int[] exitPoint1(int[][] mat) {
+        int r = 0, c = 0, dir = 0;
+        while (true) {
+            dir = (dir + mat[r][c]) % 4;
+            if (dir == 0) {
+                c++;
+                if (c == mat[0].length) {
+                    c--;
+                    break;
+                }
+            } else if (dir == 1) {
+                r++;
+                if (r == mat.length) {
+                    r--;
+                    break;
+                }
+            } else if (dir == 2) {
+                c--;
+                if (c == -1) {
+                    c++;
+                    break;
+                }
+            } else {
+                r--;
+                if (r == -1) {
+                    r++;
+                    break;
+                }
+            }
+        }
+        int[] ans = new int[2];
+        ans[0] = r;
+        ans[1] = c;
+        return ans;
+    }
+
+    public static void spiralPrint(int[][] mat) {
+        int rmin = 0, cmin = 0, rmax = mat.length - 1, cmax = mat[0].length - 1;
+        int tne = (cmax + 1) * (rmax + 1);
+        while (tne > 0) {
+            for (int i = cmin; i <= cmax && tne > 0; i++) {
+                System.out.print(mat[rmin][i] + " ");
+                tne--;
+            }
+            rmin++;
+            for (int i = rmin; i <= rmax && tne > 0; i++) {
+                System.out.print(mat[i][cmax] + " ");
+                tne--;
+            }
+            cmax--;
+            for (int i = cmax; i >= cmin && tne > 0; i--) {
+                System.out.print(mat[rmax][i] + " ");
+                tne--;
+            }
+            rmax--;
+            for (int i = rmax; i >= rmin && tne > 0; i++) {
+                System.out.print(mat[i][cmin] + " ");
+                tne--;
+            }
+            cmin++;
+        }
+    }
+
+    /********************** LEETCODE QUESTIONS ************************************/
     public static void LeetCode() {
         // int[] arr = { 1, 2, 3, 4, 5, 6, 7 };
         // Rotate Array
@@ -284,8 +406,15 @@ public class basicfunc {
          * int[] nums={2,2,4,5,7,8,3,4,5,7}; System.out.println(arrayPairSum(nums));
          */
         // LEETCODE 922
-        innt[] arr = { 4, 2, 3, 5 };
+        /*
+        int[] arr = { 4, 2, 3, 5 };
         display1D(arr);
+        */
+        // LEETCODE1
+        /*
+        int[] nums={2,3,4};
+        display1D(twoSum(nums,6));
+        */
     }
 
     public static ArrayList<Boolean> kidsWithCandies(int[] candies, int extraCandies) {
@@ -338,15 +467,15 @@ public class basicfunc {
         return dig;
     }
 
-    // public int findNumbers(int[] nums) {
-    // int ans=0;
-    // for(int ele:nums)
-    // {
-    // if((ele>=10 && ele<=99) || (ele>=1000 && ele<=9999) || ele==100000)
-    // ans++;
-    // }
-    // return ans;
-    // }
+    public int findNumbers1(int[] nums) {
+        int ans = 0;
+        for (int ele : nums) {
+            if ((ele >= 10 && ele <= 99) || (ele >= 1000 && ele <= 9999) || ele == 100000)
+                ans++;
+        }
+        return ans;
+    }
+
     public static int minTimeToVisitAllPoints(int[][] points) {
         if (points.length == 0)
             return 0;
@@ -572,6 +701,7 @@ public class basicfunc {
     }
 
     public static int[] sortArrayByParityII(int[] A) {
+
         int i = 0;
         int j = 1;
         int even = 0;
@@ -593,8 +723,26 @@ public class basicfunc {
         return A;
     }
 
-    // *****************************************************************//
-    // Helper functions
+    public static int[] twoSum(int[] nums, int target) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int[] ans = new int[2];
+        for (int i = 0; i < nums.length; i++) {
+            if (map.size() == 0)
+                map.put(nums[i], i);
+            else {
+                if (map.containsKey(target - nums[i]) && i != map.get(target - nums[i])) {
+                    ans[0] = map.get(target - nums[i]);
+                    ans[1] = i;
+                    break;
+                }
+                map.put(nums[i], i);
+            }
+        }
+        return ans;
+    }
+
+    // ******************************// Helper
+    // functions***********************************//
 
     public static void display1D(int[] arr) {
         for (int ele : arr) {

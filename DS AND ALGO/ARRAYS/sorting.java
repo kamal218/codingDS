@@ -20,8 +20,6 @@ public class sorting
                 if(arr[j]<arr[min_idx])
                 min_idx=j;
             }
-            if(min_idx==i)              // condition for sorted array
-            break;
             swap(arr,min_idx,i);
         }
     }
