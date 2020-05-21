@@ -1,5 +1,7 @@
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.lang.model.util.ElementScanner6;
 
@@ -13,8 +15,8 @@ public class basicfunc {
     }
 
     public static void solve() {
-        basicf();
-        // LeetCode();
+        // basicf();
+        LeetCode();
     }
 
     /***************************************
@@ -319,7 +321,7 @@ public class basicfunc {
                 tne--;
             }
             rmax--;
-            for (int i = rmax; i >= rmin && tne > 0; i++) {
+            for (int i = rmax; i >= rmin && tne > 0; i--) {
                 System.out.print(mat[i][cmin] + " ");
                 tne--;
             }
@@ -439,8 +441,27 @@ public class basicfunc {
          * System.out.println(findLuckyNoHashMap(arr));
          */
         // LEETCODE 1413
-        int[] nums={-3,2,-3,4,2};
-        System.out.println(minStartValue(nums));
+        /*
+         * int[] nums={-3,2,-3,4,2}; System.out.println(minStartValue(nums));
+         */
+        // LEETCODE 34
+        /*
+         * int[] nums = { 2, 4, 5, 5, 5, 8, 9 }; display1D(searchRange(nums, 5));
+         */
+        // Spiral2 LEETCODE 59
+        /*
+        display2D(spiral2(3));
+        */
+        // LEETCODE 88
+        /*
+        int[] nums1={1,2,3,0,0,0};
+        int[] nums2={2,4,5};
+        mergeModify(nums1, 3, nums2, 3);
+        display1D(nums1);
+        */
+        // LEETCODE 162
+        int[] nums={1,2,2,1};
+        System.out.println(findPeakElement(nums));
 
     }
 
@@ -909,6 +930,108 @@ public class basicfunc {
         return ans > 0 ? 1 : ((-ans) + 1);
     }
 
+    public static int[] searchRange(int[] nums, int target) {
+        int[] ans = new int[2];
+        ans[0] = -1;
+        ans[1] = -1;
+        int si = 0, ei = nums.length - 1, mid = 0;
+        while (si <= ei) {
+            mid = (si + ei) / 2;
+            if (nums[mid] < target)
+                si = mid + 1;
+            else if (nums[mid] > target)
+                ei = mid - 1;
+            else
+                break;
+        }
+        int midr = mid;
+        int midl = mid;
+        if (si > ei)
+            return ans;
+        else {
+            while (midl != -1 && nums[midl] == target)
+                midl--;
+            while (midr != nums.length && nums[midr] == target)
+                midr++;
+
+            ans[0] = midl + 1;
+            ans[1] = midr - 1;
+        }
+        return ans;
+    }
+
+    public static int[][] spiral2(int n) {
+        int[][] ans = new int[n][n];
+        int val = 1;
+        int rmin = 0, cmin = 0, rmax = n - 1, cmax = n - 1;
+        int tne = (cmax + 1) * (rmax + 1);
+        while (tne > 0) {
+            for (int i = cmin; i <= cmax && tne > 0; i++) {
+                ans[rmin][i] = val;
+                val++;
+                tne--;
+            }
+            rmin++;
+            for (int i = rmin; i <= rmax && tne > 0; i++) {
+                ans[i][cmax] = val;
+                val++;
+                tne--;
+            }
+            cmax--;
+            for (int i = cmax; i >= cmin && tne > 0; i--) {
+                ans[rmax][i] = val;
+                val++;
+                tne--;
+            }
+            rmax--;
+            for (int i = rmax; i >= rmin && tne > 0; i--) {
+                ans[i][cmin] = val;
+                val++;
+                tne--;
+            }
+            cmin++;
+        }
+        return ans;
+    }
+
+    public static void mergeModify(int[] nums1, int m, int[] nums2, int n) {
+        int p1 = m + n - 1, p2 = n - 1, p3 = m - 1;
+
+        while (p3 !=-1 && p2 !=-1 && p1!=-1) {
+            if (nums1[p3] > nums2[p2]) {
+                nums1[p1] = nums1[p3];
+                nums1[p3] = 0;
+                p3--;
+                p1--;
+            } else {
+                nums1[p1] = nums2[p2];
+                p2--;
+                p1--;
+            }
+        }
+        while (p2 != -1) {
+            nums1[p1] = nums2[p2];
+            p1--;
+            p2--;
+        }
+    }
+    public static int findPeakElement(int[] nums) {
+        if(nums.length==0)
+            return 0;
+        if(nums.length==1)
+            return 0;
+        if(nums[0]>=nums[1])
+            return 0;
+        if(nums[nums.length-1]>=nums[nums.length-2])
+            return nums.length-1;
+        for(int i=1;i<nums.length-1;i++)
+        {
+            if(nums[i]>=nums[i-1] && nums[i]>=nums[i+1])
+                return i;
+        }
+        return 0;
+    }
+
     // ******************************// Helper
     // functions***********************************//
 
@@ -937,7 +1060,7 @@ public class basicfunc {
 
     public static void displayArrayList2D(ArrayList<ArrayList<Integer>> list) {
         for (int i = 0; i < list.size(); i++) {
-            for (int j = 0; j < list.get(i).length; j++) {
+            for (int j = 0; j < list.get(i).size(); j++) {
                 System.out.print(list.get(i).get(j) + " ");
             }
             System.out.println();
