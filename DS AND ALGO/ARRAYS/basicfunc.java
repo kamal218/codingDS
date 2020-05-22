@@ -450,18 +450,47 @@ public class basicfunc {
          */
         // Spiral2 LEETCODE 59
         /*
-        display2D(spiral2(3));
-        */
+         * display2D(spiral2(3));
+         */
         // LEETCODE 88
         /*
-        int[] nums1={1,2,3,0,0,0};
-        int[] nums2={2,4,5};
-        mergeModify(nums1, 3, nums2, 3);
-        display1D(nums1);
-        */
+         * int[] nums1={1,2,3,0,0,0}; int[] nums2={2,4,5}; mergeModify(nums1, 3, nums2,
+         * 3); display1D(nums1);
+         */
         // LEETCODE 162
-        int[] nums={1,2,2,1};
-        System.out.println(findPeakElement(nums));
+        /*
+         * int[] nums = { 1, 2, 2, 1 }; System.out.println(findPeakElement(nums));
+         */
+        // LEETCODE 962
+        /*
+         * int[] a = { 9, 8, 1, 0, 1, 9, 4, 0, 4, 1 };
+         * System.out.println(maxWidthRamp(A));
+         */
+        // LEETCODE 1217
+        /*
+         * int[] chips = { 2, 2, 2, 3, 3 };
+         * System.out.println(minCostToMoveChips(chips));
+         */
+        // LEETCODE 941
+        /*
+         * int[] A = { 1, 2, 3, 2, 0 }; System.out.println(validMountainArray(A));
+         */
+        // LEETCODE724
+        /*
+         * int[] nums={-1,-1,-1,-1,-1,0}; System.out.println(pivotIndex(nums));
+         */
+        // LEETCODE 830
+        /*
+         * String S = "abbxxxxzyy"; displayArrayList2D(largeGroupPositions(S));
+         */
+        // LEETCODE 495
+        /*
+        int[] time = { 1, 2 };
+        System.out.println(findPoisonedDuration(time, 2));
+        */
+        // LEETCODE 229
+        int[] nums={3,2,3};
+        displayArrayList1D(majorityElement(nums));
 
     }
 
@@ -997,7 +1026,7 @@ public class basicfunc {
     public static void mergeModify(int[] nums1, int m, int[] nums2, int n) {
         int p1 = m + n - 1, p2 = n - 1, p3 = m - 1;
 
-        while (p3 !=-1 && p2 !=-1 && p1!=-1) {
+        while (p3 != -1 && p2 != -1 && p1 != -1) {
             if (nums1[p3] > nums2[p2]) {
                 nums1[p1] = nums1[p3];
                 nums1[p3] = 0;
@@ -1015,21 +1044,127 @@ public class basicfunc {
             p2--;
         }
     }
+
     public static int findPeakElement(int[] nums) {
-        if(nums.length==0)
+        if (nums.length == 0)
             return 0;
-        if(nums.length==1)
+        if (nums.length == 1)
             return 0;
-        if(nums[0]>=nums[1])
+        if (nums[0] >= nums[1])
             return 0;
-        if(nums[nums.length-1]>=nums[nums.length-2])
-            return nums.length-1;
-        for(int i=1;i<nums.length-1;i++)
-        {
-            if(nums[i]>=nums[i-1] && nums[i]>=nums[i+1])
+        if (nums[nums.length - 1] >= nums[nums.length - 2])
+            return nums.length - 1;
+        for (int i = 1; i < nums.length - 1; i++) {
+            if (nums[i] >= nums[i - 1] && nums[i] >= nums[i + 1])
                 return i;
         }
         return 0;
+    }
+
+    public static int maxWidthRamp(int[] A) {
+        int ans = 0;
+        int min_ = Integer.MAX_VALUE;
+        for (int i = 0; i < A.length - 1; i++) {
+            if (A[i] >= min_)
+                continue;
+            for (int j = i + 1; j < A.length; j++) {
+                min_ = A[i];
+                if (A[j] >= A[i]) {
+                    ans = Math.max(ans, j - i);
+                }
+            }
+        }
+        return ans;
+    }
+
+    public static int minCostToMoveChips(int[] chips) {
+        if (chips.length <= 1)
+            return 0;
+        int even = 0, odd = 0, ele = chips[0];
+        for (int i = 0; i < chips.length; i++) {
+            if ((chips[i] - ele) % 2 == 0)
+                even++;
+            else
+                odd++;
+        }
+        return Math.min(even, odd);
+    }
+
+    public static boolean validMountainArray(int[] A) {
+        if (A.length < 3)
+            return false;
+        int si = 1, ei = A.length - 2;
+        while (si < A.length && A[si - 1] < A[si]) {
+            si++;
+        }
+        if (si == A.length)
+            return false;
+        while (ei >= 0 && A[ei + 1] < A[ei]) {
+            ei--;
+        }
+        if (ei == -1)
+            return false;
+        if (si - 1 == ei + 1)
+            return true;
+        return false;
+
+    }
+
+    public static int pivotIndex(int[] nums) {
+        if (nums.length < 3)
+            return -1;
+        int sum = 0, lsum = 0;
+        for (int ele : nums)
+            sum += ele;
+        for (int i = 0; i < nums.length; i++) {
+            lsum += nums[i];
+            if (lsum - nums[i] == sum - lsum)
+                return i;
+        }
+        return -1;
+    }
+
+    public static ArrayList<ArrayList<Integer>> largeGroupPositions(String S) {
+        ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
+        int si = 0, ei = 0;
+        while (si < S.length()) {
+            ei = si;
+            while (ei < S.length() && S.charAt(ei) == S.charAt(si)) {
+                ei++;
+            }
+            if (ei - si >= 3) {
+                ArrayList<Integer> list = new ArrayList<>();
+                list.add(si);
+                list.add(ei - 1);
+                ans.add(list);
+                // ans.add(Arrays.asList(new Integer[]{si,ei-1}));
+            }
+            si = ei;
+        }
+        return ans;
+    }
+
+    public static int findPoisonedDuration(int[] time, int dur) {
+        if (time.length == 0)
+            return 0;
+        int ans = 0;
+        for (int i = 0; i < time.length - 1; i++) {
+            ans += Math.min(dur, time[i + 1] - time[i]);
+        }
+        return ans + dur;
+    }
+
+    public static ArrayList<Integer> majorityElement(int[] nums) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        ArrayList<Integer> ans = new ArrayList<>();
+        for (int ele : nums) {
+            map.put(ele, map.getOrDefault(ele, 0) + 1);
+        }
+        for (Integer key : map.keySet()) {
+            if (map.get(key) > (nums.length / 3))
+                ans.add(key);
+        }
+        return ans;
     }
 
     // ******************************// Helper
