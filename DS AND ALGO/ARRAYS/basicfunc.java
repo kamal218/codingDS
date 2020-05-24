@@ -485,12 +485,53 @@ public class basicfunc {
          */
         // LEETCODE 495
         /*
-        int[] time = { 1, 2 };
-        System.out.println(findPoisonedDuration(time, 2));
-        */
+         * int[] time = { 1, 2 }; System.out.println(findPoisonedDuration(time, 2));
+         */
         // LEETCODE 229
-        int[] nums={3,2,3};
-        displayArrayList1D(majorityElement(nums));
+        /*
+         * int[] nums={3,2,3}; displayArrayList1D(majorityElement2(nums));
+         */
+        // LEETCODE 169
+        /*
+         * int[] nums={3,3,2}; System.out.println(majorityElement(nums));
+         */
+        // LEECODE
+        /*
+         * int[][] matrix = { { 1, 2, 3, 4 }, { 5, 1, 2, 3 }, { 9, 5, 1, 2 } };
+         * System.out.println(isToeplitzMatrix(matrix));
+         */
+        // LEETCODE 985
+        /*
+         * int[] A={1,2,3,4}; int[][] q={{1,0},{-3,1},{-4,0},{2,3}};
+         * display1D(sumEvenAfterQueries(A, q));
+         */
+        // LEETCODE 566
+        /*
+         * int[][] nums = { { 1, 2 }, { 3, 4 } }; display2D(matrixReshape(nums, 1, 4));
+         */
+        // LEETCODE 1287
+        /*
+         * int[] arr = { 1, 2, 2, 6, 6, 6, 6, 7, 10 };
+         * System.out.println(findSpecialInteger(arr));
+         */
+        // LEETCODE
+        /*
+         * String[] queries = { "bbb", "cc" }; String[] words = { "a", "aa", "aaa",
+         * "aaaa" }; display1D(numSmallerByFrequency(queries, words));
+         */
+        // LEETCODE
+        /*
+         * int[] arr = { 5, 8, 7, 6, 3, 1, 4, 8 }; display1D(arrayRankTransform(arr));
+         */
+        // LEETCODE 888
+        /*
+        int[] A = { 5, 1, 2 };
+        int[] b = { 2, 4 };
+        display1D(fairCandySwap(A, B));
+        */
+        // LEETCODE 
+        int[] arr={1,2,3,4,5,9,8,7};
+        System.out.println(isMonotonic(arr));
 
     }
 
@@ -1154,7 +1195,7 @@ public class basicfunc {
         return ans + dur;
     }
 
-    public static ArrayList<Integer> majorityElement(int[] nums) {
+    public static ArrayList<Integer> majorityElement2(int[] nums) {
         HashMap<Integer, Integer> map = new HashMap<>();
         ArrayList<Integer> ans = new ArrayList<>();
         for (int ele : nums) {
@@ -1165,6 +1206,194 @@ public class basicfunc {
                 ans.add(key);
         }
         return ans;
+    }
+
+    public static int majorityElement(int[] nums) {
+        int max_ = 0;
+        int count = 1;
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[max_] == nums[i])
+                count++;
+            else
+                count--;
+            if (count == 0) {
+                max_ = i;
+                count = 1;
+            }
+        }
+        return nums[max_];
+    }
+
+    public static boolean isToeplitzMatrix(int[][] matrix) {
+        for (int i = 1; i < matrix.length; i++) {
+            for (int j = 1; j < matrix[0].length; j++) {
+                if (i - 1 >= 0 && j - 1 >= 0)
+                    if (matrix[i - 1][j - 1] != matrix[i][j])
+                        return false;
+            }
+        }
+        return true;
+    }
+
+    public static int[] sumEvenAfterQueries(int[] A, int[][] q) {
+        int sum = 0;
+        int[] ans = new int[q.length];
+        for (int i = 0; i < A.length; i++) {
+            if (A[i] % 2 == 0)
+                sum += A[i];
+        }
+        for (int i = 0; i < q.length; i++) {
+            int j = q[i][1];
+            if (A[j] % 2 != 0) {
+                if (q[i][0] % 2 != 0) {
+                    sum += (q[i][0] + A[j]);
+                }
+            } else {
+                if (q[i][0] % 2 != 0) {
+                    sum -= A[j];
+                } else {
+                    sum += q[i][0];
+                }
+            }
+            A[j] = q[i][0] + A[j];
+            ans[i] = sum;
+
+        }
+        return ans;
+    }
+
+    public static int[][] matrixReshape(int[][] nums, int r, int c) {
+        int row = nums.length;
+        int col = nums[0].length;
+        if (row * col != r * c)
+            return nums;
+        int[][] ans = new int[r][c];
+        int idx = 0;
+        for (int i = 0; i < r; i++) {
+            for (int j = 0; j < c; j++) {
+                ans[i][j] = nums[idx / col][idx % col];
+                idx++;
+            }
+        }
+        return ans;
+    }
+
+    public static int findSpecialInteger(int[] arr) {
+        int ans = 0;
+        int i = 0, j = 0, count = 0;
+        while (j < arr.length) {
+            count = 0;
+            while (arr[i] == arr[j]) {
+                count++;
+                if (count > (arr.length / 4))
+                    return arr[i];
+                j++;
+            }
+            i = j;
+        }
+        return ans;
+    }
+
+    public static int[] numSmallerByFrequency(String[] queries, String[] words) {
+        int[] ans = new int[queries.length];
+        int ct = 0, fr = 0;
+        for (int i = 0; i < queries.length; i++) {
+            ct = 0;
+            fr = freq(queries[i]);
+            System.out.println(fr);
+            for (int j = 0; j < words.length; j++) {
+                if (fr < freq(words[j]))
+                    ct++;
+            }
+            ans[i] = ct;
+        }
+        return ans;
+    }
+
+    public static int freq(String str) {
+        int ans = 0, min_ = 27;
+        for (int i = 0; i < str.length(); i++) {
+            char ch = str.charAt(i);
+            if (ch - 'a' < min_) {
+                ans = 1;
+                min_ = ch - 'a';
+            } else if (ch - 'a' == min_)
+                ans++;
+        }
+        return ans;
+    }
+
+    public static int[] arrayRankTransform(int[] arr) {
+        int[] help = new int[arr.length];
+        for (int i = 0; i < arr.length; i++)
+            help[i] = arr[i];
+        Arrays.sort(help);
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int rank = 1;
+        for (int i = 0; i < help.length; i++) {
+            if (!map.containsKey(help[i])) {
+                map.put(help[i], rank);
+                rank++;
+            }
+        }
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = map.get(arr[i]);
+        }
+        return arr;
+    }
+
+    public static int[] fairCandySwap(int[] A, int[] B) {
+        int[] ans = new int[2];
+        int sum1 = 0, sum2 = 0;
+        for (int i = 0; i < A.length; i++)
+            sum1 += A[i];
+        for (int i = 0; i < B.length; i++)
+            sum2 += B[i];
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int sum = (sum1 - sum2 > 0 ? sum1 - sum2 : sum2 - sum1) / 2;
+        for (int i = 0; i < B.length; i++)
+            map.put(B[i], 1);
+        for (int i = 0; i < A.length; i++) {
+            if (sum1 - sum2 > 0) {
+                if (map.containsKey(A[i] - sum)) {
+                    ans[0] = A[i];
+                    ans[1] = A[i] - sum;
+                }
+            } else {
+                if (map.containsKey(A[i] + sum)) {
+                    ans[0] = A[i];
+                    ans[1] = A[i] + sum;
+                }
+            }
+        }
+        return ans;
+    }
+
+    public static boolean isMonotonic(int[] arr) {
+        if (arr.length < 2)
+            return true;
+        Boolean res = false;
+        if (arr[0] < arr[1]) // increasing
+            res = true;
+        else if (arr[0] == arr[1]) {
+            int i = 1;
+            while (i < arr.length - 1 && arr[i] == arr[i + 1])
+                i++;
+            if (i == arr.length - 1)
+                return true;
+            if (arr[i + 1] > arr[i])
+                res = true;
+        }
+        for (int i = 1; i < arr.length - 1; i++) {
+            if (res) {
+                if (arr[i + 1] < arr[i])
+                    return false;
+            } else {
+                if (arr[i + 1] > arr[i])
+                    return false;
+            }
+        }
+        return true;
     }
 
     // ******************************// Helper
