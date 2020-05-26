@@ -1,5 +1,6 @@
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -525,13 +526,42 @@ public class basicfunc {
          */
         // LEETCODE 888
         /*
-        int[] A = { 5, 1, 2 };
-        int[] b = { 2, 4 };
-        display1D(fairCandySwap(A, B));
-        */
-        // LEETCODE 
-        int[] arr={1,2,3,4,5,9,8,7};
-        System.out.println(isMonotonic(arr));
+         * int[] A = { 5, 1, 2 }; int[] b = { 2, 4 }; display1D(fairCandySwap(A, B));
+         */
+        // LEETCODE
+        /*
+         * int[] arr = { 1, 2, 3, 4, 5, 9, 8, 7 }; System.out.println(isMonotonic(arr));
+         */
+        // LEETCODE containsDuplicate
+        /*
+         * int nums = { 1, 2, 3, 1 }; // System.out.println(containsDuplicate(nums));
+         * System.out.println(ConcurrentHashMap(nums));
+         */
+        // LEETCODE containsDuplicate2
+        /*
+         * int[] nums = { 1, 2, 3, 1 }; int k = 2;
+         * System.out.println(containsNearbyDuplicate(nums, k));
+         */
+        // LEETCODE 485
+        /*
+         * int[] nums = { 1, 0, 1, 1, 0, 0, 1, 1, 1 };
+         * System.out.println(findMaxConsecutiveOnes(nums));
+         */
+        // LEETCODE448
+        /*
+         * int[] nums = { 4, 3, 2, 7, 8, 2, 3, 1 }; //
+         * displayArrayList1D(findDisappearedNumbers(nums)); //
+         * displayArrayList1D(findDisappearedNumbers2(nums));
+         * displayArrayList1D(findDisappearedNumbersBest(nums));
+         */
+        // LEETCODE 1184
+        /*
+         * int[] arr = { 1, 2, 3, 4, 5 };
+         * System.out.println(distanceBetweenBusStops(arr, 0, 2));
+         */
+        // LEETCODE
+        int[] A={1,-1,1,-1};
+        System.out.println(canThreePartsEqualSum(A));
 
     }
 
@@ -1394,6 +1424,148 @@ public class basicfunc {
             }
         }
         return true;
+    }
+
+    public static boolean containsDuplicate(int[] nums) {
+        Arrays.sort(nums);
+        int i = 0, j = 1;
+        while (j < nums.length) {
+            if (nums[i] == nums[j])
+                return true;
+            else {
+                i = j;
+                j++;
+            }
+        }
+        return false;
+    }
+
+    public boolean containsDuplicateMap(int[] nums) {
+        HashMap<Integer, Boolean> map = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (map.containsKey(nums[i]))
+                return true;
+            else
+                map.put(nums[i], true);
+        }
+        return false;
+    }
+
+    public static boolean containsNearbyDuplicate(int[] nums, int k) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (!map.containsKey(nums[i]))
+                map.put(nums[i], i);
+            else {
+                if ((i - map.get(nums[i])) <= k)
+                    return true;
+                else
+                    map.put(nums[i], i);
+            }
+        }
+        return false;
+    }
+
+    public static int findMaxConsecutiveOnes(int[] nums) {
+        int i = 0;
+        int ans = -1, ct = 0;
+        ;
+        while (i < nums.length) {
+            ct = 0;
+            while (i < nums.length && nums[i] == 1) {
+                ct++;
+                i++;
+            }
+            ans = Math.max(ct, ans);
+            i++;
+        }
+        return ans;
+    }
+
+    public static ArraList<Integer> findDisappearedNumbers(int[] nums) {
+        ArrayList<Integer> ans = new ArrayList<>();
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            map.put(nums[i], i);
+        }
+        for (int i = 1; i < nums.length + 1; i++)
+
+        {
+            if (!map.containsKey(i))
+                ans.add(i);
+        }
+        return ans;
+    }
+
+    public static ArrayList<Integer> findDisappearedNumbers2(int[] nums) {
+        ArrayList<Integer> ans = new ArrayList<>();
+        Boolean[] ispr = new Boolean[nums.length];
+        Arrays.fill(ispr, false);
+        for (int i = 0; i < nums.length; i++) {
+            ispr[nums[i] - 1] = true;
+        }
+        for (int i = 0; i < ispr.length; i++) {
+            if (ispr[i] == false)
+                ans.add(i + 1);
+        }
+        return ans;
+    }
+
+    public static ArrayList<Integer> findDisappearedNumbersBest(int[] nums) {
+        ArrayList<Integer> ans = new ArrayList<>();
+        int idx = 0;
+        for (int i = 0; i < nums.length;) {
+            idx = nums[i] - 1;
+            if (nums[i] != i + 1 && nums[idx] != nums[i]) {
+                nums[i] = nums[idx];
+                nums[idx] = idx + 1;
+            } else
+                i++;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] != i + 1)
+                ans.add(i + 1);
+        }
+        return ans;
+    }
+
+    public static int distanceBetweenBusStops(int[] arr, int s, int d) {
+        int sum = 0;
+        for (int i = 0; i < arr.length; i++)
+            sum += arr[i];
+        if (s > d) {
+            int temp = s;
+            s = d;
+            d = temp;
+        }
+        int dist = 0;
+        for (int i = s; i < d; i++) {
+            dist += arr[i];
+        }
+        return (sum - dist) > dist ? dist : (sum - dist);
+    }
+
+    public static boolean canThreePartsEqualSum(int[] A) {
+        int sum = 0;
+        for (int ele : A)
+            sum += ele;
+        if (sum % 3 != 0)
+            return false;
+        sum /= 3;
+        int ct = 0;
+        int rsum = 0;
+        for (int i = 0; i < A.length - 1; i++) {
+            rsum += A[i];
+            if (rsum == sum) {
+                if (ct == 1)
+                    return true;
+                else {
+                    ct++;
+                    rsum = 0;
+                }
+            }
+        }
+        return false;
     }
 
     // ******************************// Helper
