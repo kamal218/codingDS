@@ -559,9 +559,14 @@ public class basicfunc {
          * int[] arr = { 1, 2, 3, 4, 5 };
          * System.out.println(distanceBetweenBusStops(arr, 0, 2));
          */
-        // LEETCODE
+        // 
+        /*
         int[] A={1,-1,1,-1};
         System.out.println(canThreePartsEqualSum(A));
+        */
+        // LEETCODE
+        int[] nums={3,0,1};
+        System.out.println(missingNumber(nums));
 
     }
 
@@ -1566,6 +1571,14 @@ public class basicfunc {
             }
         }
         return false;
+    }
+     public static int missingNumber(int[] nums) {
+        int num=nums.length;
+        for(int i=0;i<nums.length;i++)
+        {
+            num=num^(i^nums[i]);
+        }
+        return num;
     }
 
     // ******************************// Helper
