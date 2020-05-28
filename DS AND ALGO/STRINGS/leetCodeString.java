@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class leetCodeString {
 
@@ -60,13 +61,21 @@ public class leetCodeString {
          */
         // LEETCODE824
         /*
-        String s = "I speak Goat Latin";
-        System.out.println(toGoatLatin(S));
-        */
+         * String s = "I speak Goat Latin"; System.out.println(toGoatLatin(S));
+         */
         // LEETCODE 1189
-        System.out.println(maxNumberOfBalloons("nlaebolko"));
-
-
+        /*
+         * System.out.println(maxNumberOfBalloons("nlaebolko"));
+         */
+        // LEETCODE1408
+        /*
+        Strings[] words = { "leetcoder", "leetcode", "od", "hamlet", "am" };
+        System.out.println(stringMatching(words));
+        */
+        // LEETCODE 1170
+        String[] queries={"cbd"};
+        String[] words ={"zaaaz"};
+        display1D(numSmallerByFrequency(queries, words));
     }
 
     public static String defangIPaddr(String str) {
@@ -210,7 +219,7 @@ public class leetCodeString {
     }
 
     public static int numUniqueEmails(String[] emails) {
-        Set<String> seen = new HashSet<>();
+        HashSet<String> seen = new HashSet<>();
         for (String email : emails)
             seen.add(cleanEmail(email));
         return seen.size();
@@ -346,6 +355,83 @@ public class leetCodeString {
             arr['n']--;
         }
         return count;
-
     }
+
+    public static ArrayList<String> stringMatching(String[] words) {
+        ArrayList<String> ans = new ArrayList<>();
+        for (int i = 0; i < words.length; i++) {
+            for (int j = 0; j < words.length; j++) {
+                if (words[i] == words[j])
+                    continue;
+                if (words[j].contains(words[i])) {
+                    ans.add(words[i]);
+                    break;
+                }
+            }
+        }
+        return ans;
+    }
+
+    public static int[] numSmallerByFrequency(String[] queries, String[] words) {
+        int[] ans = new int[queries.length];
+        int ct = 0, fr = 0;
+        for (int i = 0; i < queries.length; i++) {
+            ct = 0;
+            fr = freq(queries[i]);
+            System.out.println(fr);
+            for (int j = 0; j < words.length; j++) {
+                if (fr < freq(words[j]))
+                    ct++;
+            }
+            ans[i] = ct;
+        }
+        return ans;
+    }
+
+    public static int freq(String str) {
+        int ans = 0, min_ = 27;
+        for (int i = 0; i < str.length(); i++) {
+            char ch = str.charAt(i);
+            if (ch - 'a' < min_) {
+                ans = 1;
+                min_ = ch - 'a';
+            } else if (ch - 'a' == min_)
+                ans++;
+        }
+        return ans;
+    }
+    //***************************HELPER FUNCTIONS********************************************/
+    public static void display1D(int[] arr) {
+        for (int ele : arr) {
+            System.out.print(ele + " ");
+        }
+        System.out.println();
+    }
+
+    public static void display2D(int[][] mat) {
+        for (int[] submat : mat) {
+            for (int ele : submat) {
+                System.out.print(ele + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+
+    public static void displayArrayList1D(ArrayList<Integer> list) {
+        for (int i = 0; i < list.size(); i++)
+            System.out.print(list.get(i) + " ");
+        System.out.println();
+    }
+
+    public static void displayArrayList2D(ArrayList<ArrayList<Integer>> list) {
+        for (int i = 0; i < list.size(); i++) {
+            for (int j = 0; j < list.get(i).size(); j++) {
+                System.out.print(list.get(i).get(j) + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+
 }
