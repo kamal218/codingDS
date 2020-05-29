@@ -69,13 +69,33 @@ public class leetCodeString {
          */
         // LEETCODE1408
         /*
-        Strings[] words = { "leetcoder", "leetcode", "od", "hamlet", "am" };
-        System.out.println(stringMatching(words));
-        */
+         * Strings[] words = { "leetcoder", "leetcode", "od", "hamlet", "am" };
+         * System.out.println(stringMatching(words));
+         */
         // LEETCODE 1170
-        String[] queries={"cbd"};
-        String[] words ={"zaaaz"};
-        display1D(numSmallerByFrequency(queries, words));
+        /*
+         * String[] queries = { "cbd" }; String[] words = { "zaaaz" };
+         * display1D(numSmallerByFrequency(queries, words));
+         */
+        // LEETCODE
+        /*
+         * System.out.println(lengthOfLastWord("a   b   m"));
+         * System.out.println(lengthOfLastWordBest("a  f  f  fffk"));
+         */
+        // LEETCODE
+        /*
+         * System.out.println(strStr("aa", "a"));
+         */
+        // LEETCODE
+        /*
+         * String[] strs = { "aa", "b" }; System.out.println(longestCommonPrefix(strs));
+         */
+        // LEETCODE 125
+        /*
+         * System.out.println(isPalindrome("helll, .,leh"));
+         */
+        // LEETCODE 434
+        System.out.println(countSegments("Hello, my name is John"));
     }
 
     public static String defangIPaddr(String str) {
@@ -400,7 +420,99 @@ public class leetCodeString {
         }
         return ans;
     }
-    //***************************HELPER FUNCTIONS********************************************/
+
+    public static int lengthOfLastWord(String s) {
+        int ans = 0, j = 0;
+        for (int i = 0; i <= s.length(); i++) {
+
+            while (i < s.length() & j < s.length() && s.charAt(j) == ' ') {
+                i++;
+                j++;
+            }
+            if ((i == s.length() || s.charAt(i) == ' ') && j < s.length()) {
+                ans = (i - j);
+                j = i + 1;
+            }
+        }
+        return ans;
+    }
+
+    public static int lengthOfLastWordBest(String s) {
+        int right = s.length() - 1;
+        int ans = 0;
+        while (right >= 0) {
+            while (right >= 0 && s.charAt(right) == ' ')
+                right--;
+            while (right >= 0 && s.charAt(right) != ' ') {
+                right--;
+                ans++;
+            }
+            break;
+        }
+        return ans;
+    }
+
+    public static int strStr(String h, String n) {
+        if (h.length() < n.length())
+            return -1;
+        if (n.length() == 0)
+            return 0;
+        for (int i = 0; i <= h.length() - n.length(); i++) {
+            if (i + n.length() <= h.length() && h.charAt(i) == n.charAt(0) && h.substring(i, i + n.length()).equals(n))
+                return i;
+        }
+        return -1;
+    }
+
+    public static String longestCommonPrefix(String[] strs) {
+        if (strs.length == 0)
+            return "";
+        char p;
+        for (int i = 0; i < strs[0].length(); i++) {
+            p = strs[0].charAt(i);
+            for (int j = 1; j < strs.length; j++) {
+                if (i == strs[j].length() || !(p == (strs[j].charAt(i))))
+                    return strs[0].substring(0, i);
+            }
+        }
+        return strs[0];
+    }
+
+    public static boolean isPalindrome(String s) {
+        int i = 0, j = s.length() - 1;
+        while (i < j) {
+            if (j >= 0 && !Character.isLetter(s.charAt(j)) && !Character.isDigit(s.charAt(j)))
+                j--;
+            else if (i < s.length() && !Character.isLetter(s.charAt(i)) && !Character.isDigit(s.charAt(i)))
+                i++;
+            else if (Character.toLowerCase(s.charAt(i)) != Character.toLowerCase(s.charAt(j))) {
+                return false;
+            } else {
+                i++;
+                j--;
+            }
+        }
+        return true;
+    }
+
+    public static int countSegments(String s) {
+
+        int ans = 0, j = 0;
+        for (int i = 0; i <= s.length(); i++) {
+            while (j < s.length() && s.charAt(j) == ' ') {
+                i++;
+                j++;
+            }
+            if ((i == s.length() || s.charAt(i) == ' ') && j - i != 0) {
+                ans++;
+                j = i + 1;
+            }
+        }
+        return ans;
+    }
+
+    // ***************************HELPER
+    // FUNCTIONS********************************************/
     public static void display1D(int[] arr) {
         for (int ele : arr) {
             System.out.print(ele + " ");
