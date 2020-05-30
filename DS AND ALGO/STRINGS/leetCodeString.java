@@ -95,7 +95,15 @@ public class leetCodeString {
          * System.out.println(isPalindrome("helll, .,leh"));
          */
         // LEETCODE 434
-        System.out.println(countSegments("Hello, my name is John"));
+        /*
+         * System.out.println(countSegments("Hello, my name is John"));
+         */
+        // LEETCODE917
+        /*
+        System.out.println(reverseOnlyLetters("z<*zj"));
+        */
+        // LEETCODE 1417
+        System.out.println(reformat("abc123"));
     }
 
     public static String defangIPaddr(String str) {
@@ -508,6 +516,74 @@ public class leetCodeString {
                 j = i + 1;
             }
         }
+        return ans;
+    }
+
+    public static String reverseOnlyLetters(String str) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < str.length(); i++) {
+            sb.append(str.charAt(i));
+        }
+        char a, b, ch;
+        int i = 0, j = sb.length() - 1;
+        while (i < j) {
+            a = sb.charAt(i);
+            b = sb.charAt(j);
+            if (a < 'A' || a > 'z' || (a > 'Z' && a < 'a')) {
+                i++;
+            } else if (b < 'A' || b > 'z' || (b > 'Z' && b < 'a')) {
+                j--;
+            } else {
+                ch = sb.charAt(i);
+                sb.setCharAt(i, sb.charAt(j));
+                sb.setCharAt(j, ch);
+                i++;
+                j--;
+            }
+
+        }
+        return sb.toString();
+    }
+
+    public static String reformat(String s) {
+        if (s.length() == 0)
+            return "";
+        String ans = "";
+        int ch = 0, dig = 0;
+        for (int i = 0; i < s.length(); i++) {
+            if (Character.isLetter(s.charAt(i)))
+                ch++;
+            else
+                dig++;
+        }
+        if (Math.abs(ch - dig) > 1)
+            return "";
+        Boolean let = true;
+        if (dig > ch)
+            let = false;
+        int i = 0, j = 0;
+        while (i < s.length() && j < s.length()) {
+            if (let == true) {
+                if (Character.isLetter(s.charAt(i))) {
+                    ans += s.charAt(i);
+                    let = false;
+                    ch--;
+                }
+                i++;
+            } else {
+                if (s.charAt(j) - '0' >= 0 && s.charAt(j) - '0' <= 9) {
+                    ans += s.charAt(j);
+                    let = true;
+                    dig--;
+                }
+                j++;
+            }
+        }
+        if (dig != 0)
+            ans += s.charAt(j);
+        if (ch != 0)
+            ans += s.charAt(i);
+
         return ans;
     }
 
