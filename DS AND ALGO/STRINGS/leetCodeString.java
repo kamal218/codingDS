@@ -100,10 +100,52 @@ public class leetCodeString {
          */
         // LEETCODE917
         /*
-        System.out.println(reverseOnlyLetters("z<*zj"));
-        */
+         * System.out.println(reverseOnlyLetters("z<*zj"));
+         */
         // LEETCODE 1417
-        System.out.println(reformat("abc123"));
+        /*
+         * System.out.println(reformat("abc123"));
+         */
+        // LEETCODE 696
+        /*
+         * System.out.println(countBinarySubstrings("00011001001"));
+         */
+        // LEETCODE 13
+        /*
+         * System.out.println(romanToInt("IV"));
+         */
+        // LEETCODE 1422
+        /*
+         * System.out.println(maxScore("100101"));
+         */
+        // LEETCODE 1071
+        /*
+         * System.out.println(gcdOfStrings("ABCABC", "ABC"));
+         */
+        // LEETCODE 520
+        /*
+         * System.out.println(detectCapitalUse("USZFRDSg"));
+         */
+        // LEETCODE 387
+        /*
+         * System.out.println(firstUniqCharMap("leetcode"));
+         * System.out.println(firstUniqCharArray(s));
+         */
+        // LEETCODE 383
+        /*
+         * System.out.println(canConstruct("a", "ab"));
+         * System.out.println(canConstructBetter("a", "ab"));
+         */
+        // LEETCODE 415
+        /*
+         * System.out.println(addStrings("45879658", "5747889625"));
+         */
+        // LEETCODE
+        /*
+        System.out.println(repeatedSubstringPattern("abcabcabc"));
+        */
+        // LEETCODE 345
+        System.out.println(reverseVowels("hheifuhbftu"));
     }
 
     public static String defangIPaddr(String str) {
@@ -585,6 +627,293 @@ public class leetCodeString {
             ans += s.charAt(i);
 
         return ans;
+    }
+
+    public static int countBinarySubstrings(String s) {
+        if (s.length() == 0)
+            return 0;
+        Boolean zero = true;
+        int ctz = 0;
+        int cto = 0;
+        int i = 0;
+        if (s.charAt(0) - '0' == 0) {
+            while (i < s.length() && s.charAt(i) - '0' != 1) {
+                i++;
+                ctz++;
+            }
+        } else {
+            zero = false;
+            while (i < s.length() && s.charAt(i) - '0' != 0) {
+                i++;
+                cto++;
+            }
+        }
+        int ans = 0;
+        while (i != s.length()) {
+            if (zero) {
+                cto = 0;
+                while (i < s.length() && s.charAt(i) - '0' != 0) {
+                    i++;
+                    cto++;
+                }
+                ans += Math.min(ctz, cto);
+                zero = false;
+            } else {
+                ctz = 0;
+                while (i < s.length() && s.charAt(i) - '0' != 1) {
+                    i++;
+                    ctz++;
+                }
+                ans += Math.min(ctz, cto);
+                zero = true;
+            }
+        }
+        return ans;
+    }
+
+    public static int romanToInt(String s) {
+        int ans = 0;
+        int a = 0, b = 0;
+        for (int i = 0; i < s.length(); i++) {
+            b = 0;
+            a = get(s.charAt(i));
+            if (i + 1 < s.length())
+                b = get(s.charAt(i + 1));
+            if (a == b) {
+                ans += a + b;
+                i++;
+            } else if (a > b)
+                ans += a;
+            else {
+                ans += (b - a);
+                i++;
+            }
+        }
+        return ans;
+    }
+
+    int get(char i) {
+        switch (i) {
+            case 'I':
+                return 1;
+            case 'V':
+                return 5;
+            case 'X':
+                return 10;
+            case 'L':
+                return 50;
+            case 'C':
+                return 100;
+            case 'D':
+                return 500;
+            case 'M':
+                return 1000;
+        }
+        return 0;
+    }
+
+    int get1(char i) // better the switch case
+    {
+        if (i == 'I')
+            return 1;
+        else if (i == 'V')
+            return 5;
+        else if (i == 'X')
+            return 10;
+        else if (i == 'L')
+            return 50;
+        else if (i == 'C')
+            return 100;
+        else if (i == 'D')
+            return 500;
+        if (i == 'M')
+            return 1000;
+        return 0;
+    }
+
+    public static int maxScore(String s) {
+        int ans = -1;
+        int one = 0;
+        int zero = 0;
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) - '0' == 1)
+                one++;
+        }
+
+        for (int i = 0; i < s.length() - 1; i++) {
+            if (s.charAt(i) - '0' == 0) {
+                ++zero;
+            } else {
+                --one;
+            }
+            ans = Math.max(one + zero, ans);
+        }
+        return ans;
+    }
+
+    public static String gcdOfStrings(String str1, String str2) {
+
+        int gcd = 0;
+        gcd = str1.length() < str2.length() ? GCD(str1.length(), str2.length()) : GCD(str2.length(), str1.length());
+        if (!(str1 + str2).equals(str2 + str1))
+            return "";
+        return str1.substring(0, gcd);
+    }
+
+    public static int GCD(int a, int b) {
+        if (a % b == 0) {
+            return b;
+        }
+        return GCD(b, a % b);
+    }
+
+    public static boolean detectCapitalUse(String word) {
+        if (word.length() == 0)
+            return true;
+        Boolean isCap = false;
+        isCap = cap(word.charAt(0));
+        for (int i = 1; i < word.length(); i++) {
+            if (isCap) {
+                if (!cap(word.charAt(i))) {
+                    if (i > 1) // for "FFFFFc"
+                        return false;
+                    isCap = false;
+                }
+            } else {
+                if (cap(word.charAt(i)))
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    public static Boolean cap(char ch) {
+        if (((ch - 'A') >= 0 && (ch - 'Z') <= 0))
+            return true;
+        return false;
+    }
+
+    public static int firstUniqCharMap(String s) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < s.length(); i++) {
+            map.put(s.charAt(i), map.getOrDefault(s.charAt(i), 0) + 1);
+        }
+        for (int i = 0; i < s.length(); i++) {
+            if (map.get(s.charAt(i)) == 1)
+                return i;
+        }
+        return -1;
+    }
+
+    public static int firstUniqCharArray(String s) {
+        int[] map = new int[26];
+        for (int i = 0; i < s.length(); i++) {
+            map[s.charAt(i) - 'a']++;
+        }
+        for (int i = 0; i < s.length(); i++) {
+            if (map[s.charAt(i) - 'a'] == 1)
+                return i;
+        }
+        return -1;
+    }
+
+    public static boolean canConstruct(String r, String m) {
+        int[] ran = new int[26];
+        int[] mag = new int[26];
+        for (char ch : r.toCharArray())
+            ran[ch - 'a']++;
+        for (char ch : m.toCharArray())
+            mag[ch - 'a']++;
+        for (int i = 0; i < 26; i++) {
+            if (ran[i] > mag[i])
+                return false;
+        }
+        return true;
+    }
+
+    public static boolean canConstructBetter(String r, String m) {
+        int[] mag = new int[26];
+        for (char ch : m.toCharArray())
+            mag[ch - 'a']++;
+        for (int i = 0; i < r.length(); i++) {
+            if (--mag[(r.charAt(i) - 'a')] < 0)
+                return false;
+        }
+        return true;
+    }
+
+    public static String addStrings(String num1, String num2) {
+        int carry = 0;
+        String ans = "";
+        int num = 0;
+        int i = num1.length() - 1, j = num2.length() - 1;
+        while (i >= 0 && j >= 0) {
+            num = ((num1.charAt(i) - '0') + (num2.charAt(j) - '0') + carry);
+            ans = (num % 10) + "" + ans;
+            carry = num / 10;
+            i--;
+            j--;
+        }
+
+        if (i < 0) {
+            while (j >= 0) {
+                num = ((num2.charAt(j) - '0') + carry);
+                ans = (num % 10) + "" + ans;
+                carry = num / 10;
+                j--;
+            }
+        }
+        if (j < 0) {
+            while (i >= 0) {
+                num = ((num1.charAt(i) - '0') + carry);
+                ans = (num % 10) + "" + ans;
+                carry = num / 10;
+                i--;
+            }
+        }
+        if (i < 0 && j < 0 && carry != 0)
+            ans = carry + ans;
+        return ans;
+    }
+
+    public static boolean repeatedSubstringPattern(String s) {
+        String str = "";
+        for (int i = 0; i < s.length() / 2; i++) {
+            str += s.charAt(i);
+            if ((str + s).equals(s + str))
+                return true;
+        }
+        return false;
+    }
+
+    public static String reverseVowels(String s) {
+        int i = 0, j = s.length() - 1;
+
+        char[] arr = s.toCharArray();
+        while (i < j) {
+            if (vow(arr[i]) && vow(arr[j])) {
+                char ch = arr[i];
+                arr[i] = arr[j];
+                arr[j] = ch;
+                i++;
+                j--;
+            } else if (vow(arr[i]))
+                j--;
+            else if (vow(arr[j]))
+                i++;
+            else {
+                i++;
+                j--;
+            }
+        }
+        return String.valueOf(arr);
+    }
+
+    public Boolean vow(char ch) {
+        if (ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u' || ch == 'A' || ch == 'E' || ch == 'I'
+                || ch == 'O' || ch == 'U')
+            return true;
+        return false;
     }
 
     // ***************************HELPER
