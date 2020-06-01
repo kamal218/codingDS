@@ -142,10 +142,47 @@ public class leetCodeString {
          */
         // LEETCODE
         /*
-        System.out.println(repeatedSubstringPattern("abcabcabc"));
-        */
+         * System.out.println(repeatedSubstringPattern("abcabcabc"));
+         */
         // LEETCODE 345
-        System.out.println(reverseVowels("hheifuhbftu"));
+        /*
+         * System.out.println(reverseVowels("hheifuhbftu"));
+         */
+        // LLETCODE 859
+        /*
+         * System.out.println(buddyStrings("aa", "aa"));
+         * System.out.println(buddyStringsBetter("aba", "aba"));
+         */
+        // LEETCODE 125
+        /*
+         * System.out.println(isPalindrome1("Helleo llehytd"));
+         */
+        // LEETCODE 680
+        /*
+         * System.out.println(validPalindrome2("addsfstggaf"));
+         */
+        // LEETCODE 443
+        /*
+         * System.out.println(compress(ch));
+         */
+        // LEETCODE 551
+        /*
+         * System.out.println(checkRecord("APLLA"));
+         */
+        // LEETCODE 1347
+        /*
+         * System.out.println(minSteps("aba", "bab"));
+         */
+        // LEETCODE
+        /*
+         * System.out.println(customSortString("abcdd", "ab"));
+         */
+        // LEETCODE 848
+        /*
+         * int[] sh={10,20,30}; System.out.println(shiftingLetters("abc", sh));
+         */
+        // LEETCODE 1328
+        System.out.println(breakPalindrome("ana"));
     }
 
     public static String defangIPaddr(String str) {
@@ -916,6 +953,204 @@ public class leetCodeString {
         return false;
     }
 
+    public static boolean buddyStrings(String A, String B) {
+        if (A.length() != B.length())
+            return false;
+        if (A.length() < 2)
+            return false;
+        int i = 0, j = A.length() - 1, k = 0;
+        if (A.equals(B)) {
+            int[] map = new int[26];
+            for (i = 0; i < A.length(); i++)
+                map[A.charAt(i) - 'a']++;
+            for (i = 0; i < 26; i++)
+                if (map[i] > 1)
+                    return true;
+            return false;
+        }
+        while (i < A.length() && A.charAt(i) == B.charAt(i)) {
+            i++;
+        }
+        while (j >= 0 && A.charAt(j) == B.charAt(j)) {
+            j--;
+        }
+        if (A.charAt(i) != B.charAt(j) || A.charAt(j) != B.charAt(i))
+            return false;
+        return true;
+    }
+
+    public static boolean buddyStringsBetter(String A, String B) {
+        if (A.length() != B.length())
+            return false;
+        if (A.equals(B)) {
+            int[] count = new int[26];
+            for (int i = 0; i < A.length(); ++i)
+                count[A.charAt(i) - 'a']++;
+
+            for (int c : count)
+                if (c > 1)
+                    return true;
+            return false;
+        } else {
+            int first = -1, second = -1;
+            for (int i = 0; i < A.length(); ++i) {
+                if (A.charAt(i) != B.charAt(i)) {
+                    if (first == -1)
+                        first = i;
+                    else if (second == -1)
+                        second = i;
+                    else
+                        return false;
+                }
+            }
+
+            return (second != -1 && A.charAt(first) == B.charAt(second) && A.charAt(second) == B.charAt(first));
+        }
+    }
+
+    public static boolean isPalindrome1(String s) {
+        int i = 0, j = s.length() - 1;
+        while (i < j) {
+            if (j >= 0 && !letOrDig(s.charAt(j)) && !letOrDig(s.charAt(j)))
+                j--;
+            else if (i < s.length() && !letOrDig(s.charAt(i)) && !letOrDig(s.charAt(i)))
+                i++;
+            else if (Character.toLowerCase(s.charAt(i)) != Character.toLowerCase(s.charAt(j))) {
+                return false;
+            } else {
+                i++;
+                j--;
+            }
+        }
+        return true;
+    }
+
+    public static boolean validPalindrome2(String s) {
+        if (s.length() <= 2)
+            return true;
+        int i = 0, j = s.length() - 1;
+        while (i < j && s.charAt(i) == s.charAt(j)) {
+            i++;
+            j--;
+        }
+        if (i == j || i > j)
+            return true;
+        return ((ispalin(s.substring(i, j))) || (ispalin(s.substring(i + 1, j + 1))));
+    }
+
+    public static int compress(char[] ch) {
+        int j = 0, ct = 0;
+        for (int i = 0; i < ch.length; i++) {
+            ct = 1;
+            while (i + 1 < ch.length && ch[i] == ch[i + 1]) {
+                ct++;
+                i++;
+            }
+            if (ct == 1) {
+                ch[j] = ch[i];
+                j++;
+            } else {
+                String str = String.valueOf(ct);
+                ch[j] = ch[i];
+                for (char c : str.toCharArray())
+                    ch[++j] = c;
+                j++;
+            }
+        }
+        return j;
+    }
+
+    public static boolean checkRecord(String s) {
+        int a = 0;
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == 'A')
+                a++;
+            if (a > 1)
+                return false;
+            if (i + 1 < s.length() && i + 2 < s.length() && s.charAt(i) == 'L' && s.charAt(i + 1) == 'L'
+                    && s.charAt(i + 2) == 'L')
+                return false;
+        }
+        return true;
+    }
+
+    public static int minSteps(String s, String t) {
+        int ans = 0;
+        int[] maps = new int[26];
+        int[] mapt = new int[26];
+        for (char ch : s.toCharArray())
+            maps[ch - 'a']++;
+        for (char ch : t.toCharArray())
+            mapt[ch - 'a']++;
+        for (int i = 0; i < 26; i++) {
+            if (mapt[i] != 0) {
+                if (maps[i] != 0) {
+                    if (maps[i] < mapt[i])
+                        ans += mapt[i] - maps[i];
+                } else {
+                    ans += mapt[i];
+                }
+            }
+        }
+        return ans;
+    }
+
+    public static String customSortString(String S, String T) {
+        int[] map = new int[26];
+        for (char ch : T.toCharArray())
+            map[ch - 'a']++;
+        StringBuilder ans = new StringBuilder();
+        int ct = 0;
+        for (char ch : S.toCharArray()) {
+            ct = map[ch - 'a'];
+            while (ct-- > 0)
+                ans.append(ch);
+            map[ch - 'a'] = 0;
+        }
+        for (int i = 0; i < 26; i++) {
+            ct = map[i];
+            while (ct-- > 0) {
+                ans.append((char) ('a' + i));
+            }
+        }
+        return ans.toString();
+    }
+
+    public static String shiftingLetters(String S, int[] sh) {
+        sh[sh.length - 1] %= 26;
+        for (int i = sh.length - 2; i >= 0; i--) {
+            sh[i] = (sh[i] + sh[i + 1]) % 26;
+        }
+        String ans = "";
+        for (int i = 0; i < S.length(); i++) {
+            if (S.charAt(i) + sh[i] > 122) {
+                ans += (char) (96 + (S.charAt(i) + sh[i] - 122));
+            } else
+                ans += (char) (S.charAt(i) + sh[i]);
+        }
+        return ans;
+    }
+
+    public static String breakPalindrome(String p) {
+        if (p.length() == 1) {
+            return "";
+        }
+        char[] ans = p.toCharArray();
+        for (int i = 0; i < ans.length; i++) {
+            if (ans[i] != 'a') {
+                if (i != p.length() / 2) {
+                    ans[i] = 'a';
+                    return String.valueOf(ans);
+                }
+            }
+        }
+        if (String.valueOf(ans).equals(p)) {
+            ans[ans.length - 1] = 'b';
+
+        }
+        return String.valueOf(ans);
+    }
+
     // ***************************HELPER
     // FUNCTIONS********************************************/
     public static void display1D(int[] arr) {
@@ -949,6 +1184,24 @@ public class leetCodeString {
             System.out.println();
         }
         System.out.println();
+    }
+
+    public static Boolean letOrDig(char ch) {
+        if (((ch - 'a' >= 0) && (ch - 'z') <= 0) || ((ch - 'A' >= 0) && (ch - 'Z') <= 0)
+                || ((ch - '0' >= 0) && (ch - '0') <= 9))
+            return true;
+        return false;
+    }
+
+    public static Boolean ispalin(String str) {
+        int i = 0, j = str.length() - 1;
+        while (i < j) {
+            if (str.charAt(i) != str.charAt(j))
+                return false;
+            i++;
+            j--;
+        }
+        return true;
     }
 
 }
