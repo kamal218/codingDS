@@ -559,14 +559,20 @@ public class basicfunc {
          * int[] arr = { 1, 2, 3, 4, 5 };
          * System.out.println(distanceBetweenBusStops(arr, 0, 2));
          */
-        // 
+        //
         /*
-        int[] A={1,-1,1,-1};
-        System.out.println(canThreePartsEqualSum(A));
-        */
+         * int[] A={1,-1,1,-1}; System.out.println(canThreePartsEqualSum(A));
+         */
         // LEETCODE
-        int[] nums={3,0,1};
+        /*
+        int[] nums = { 3, 0, 1 };
         System.out.println(missingNumber(nums));
+        */
+        // LEETCODE 999
+        /*
+        System.out.println(numRookCaptures(board));
+        */
+        
 
     }
 
@@ -1572,13 +1578,43 @@ public class basicfunc {
         }
         return false;
     }
-     public static int missingNumber(int[] nums) {
-        int num=nums.length;
-        for(int i=0;i<nums.length;i++)
-        {
-            num=num^(i^nums[i]);
+
+    public static int missingNumber(int[] nums) {
+        int num = nums.length;
+        for (int i = 0; i < nums.length; i++) {
+            num = num ^ (i ^ nums[i]);
         }
         return num;
+    }
+
+    public static int numRookCaptures(char[][] board) {
+        int ans = 0, r = 0, c = 0;
+        int rr = -1, rc = -1;
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (board[i][j] == 'R') {
+                    rr = i;
+                    rc = j;
+                    break;
+                }
+            }
+            if (rc != -1)
+                break;
+        }
+        int[][] dir = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
+        for (int i = 0; i < dir.length; i++) {
+            for (int j = 1; j < 8; j++) {
+                r = rr + j * dir[i][0];
+                c = rc + j * dir[i][1];
+                if (r > 7 || c > 7 || r < 0 || c < 0 || board[r][c] == 'B')
+                    break;
+                if (board[r][c] == 'p') {
+                    ans++;
+                    break;
+                }
+            }
+        }
+        return ans;
     }
 
     // ******************************// Helper
