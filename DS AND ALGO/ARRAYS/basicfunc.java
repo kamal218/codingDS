@@ -3,6 +3,7 @@ import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Comparator;
 
 import javax.lang.model.util.ElementScanner6;
 
@@ -572,7 +573,9 @@ public class basicfunc {
         /*
         System.out.println(numRookCaptures(board));
         */
-        
+        // LEETCODE 1029
+        int[][] costs={{10,20},{30,200},{400,50},{30,20}};
+        System.out.println(twoCitySchedCost(costs));
 
     }
 
@@ -1493,7 +1496,7 @@ public class basicfunc {
         return ans;
     }
 
-    public static ArraList<Integer> findDisappearedNumbers(int[] nums) {
+    public static ArrayList<Integer> findDisappearedNumbers(int[] nums) {
         ArrayList<Integer> ans = new ArrayList<>();
         HashMap<Integer, Integer> map = new HashMap<>();
         for (int i = 0; i < nums.length; i++) {
@@ -1614,6 +1617,32 @@ public class basicfunc {
                 }
             }
         }
+        return ans;
+    }
+     public static class sortDiff implements Comparator<int[]>
+        {
+            @Override
+            public int compare(int[] a,int[] b)
+            {
+                return (a[0]-a[1]>b[0]-b[1])?1:-1;
+            }
+        }
+    public static int twoCitySchedCost(int[][] costs) {
+        int ans=0;
+     Arrays.sort(costs,new sortDiff());
+        for(int i=0;i<costs.length;i++)
+        System.out.println(costs[i][0]+" "+costs[i][1]);
+     for(int i=0;i<costs.length;i++)
+     {
+         if(i<costs.length/2)
+         {
+             ans+=costs[i][0];
+         }
+         else
+         {
+             ans+=costs[i][1];
+         }
+     }
         return ans;
     }
 

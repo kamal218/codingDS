@@ -39,12 +39,52 @@ public class math {
          */
         // LEETCODE
         /*
-        System.out.println(checkPerfectNumber(1248579));
-        */
+         * System.out.println(checkPerfectNumber(1248579));
+         */
         // LEETCODE 1037
         /*
-        System.out.println(isBoomerang(p));
-        */
+         * System.out.println(isBoomerang(p));
+         */
+        // LEETCODE 868
+        /*
+         * System.out.println(binaryGap(125478));
+         */
+        // LEETCODE 1103
+        /*
+         * System.out.println(distributeCandies(10, 3));
+         */
+        // LEETCODE 1009
+        /*
+         * System.out.println(bitwiseComplement(12485));
+         */
+        // LEETCODE 883
+        /*
+         * int[][] grid = { 2 }; System.out.println(projectionArea(grid));
+         */
+        // LEETCODE 812
+        /*
+         * int[][] points = { { 0, 0 }, { 0, 1 }, { 1, 0 }, { 0, 2 }, { 2, 0 } };
+         * System.out.println(largestTriangleArea(points));
+         */
+        // LEETCODE 976
+        /*
+         * int[] A={1,2,1}; System.out.println(largestPerimeter(A));
+         */
+        // LEETCODE 1317
+        /*
+         * display1D(getNoZeroIntegers(11));
+         */
+        // LEETCODE 202
+        /*
+         * System.out.println(isHappy(11)); System.out.println(isHappyBest(11));
+         */
+        // LEETCODE 453
+        /*
+         * int[] nums={1,2,3}; //Inverse approach System.out.println(minMoves(nums));
+         */
+        // LEETCODE 598
+        int[][] ops={{2,2},{3,3}};
+        System.out.println(maxCount(3, 3, ops));
     }
 
     public static int subtractProductAndSum(int n) {
@@ -203,6 +243,181 @@ public class math {
     public static boolean isBoomerang(int[][] p) {
         return (p[0][0] * (p[1][1] - p[2][1]) + p[0][1] * (p[2][0] - p[1][0])
                 + (p[1][0] * p[2][1] - p[1][1] * p[2][0])) != 0;
+    }
+
+    public static int binaryGap(int N) {
+        if ((N & (N - 1)) == 0)
+            return 0;
+        int ans = 0;
+        int mx = 0;
+        while ((N & 1) != 1)
+            N = (N >> 1);
+        while (N != 0) {
+            if ((N & 1) != 0) {
+                ans = Math.max(ans, mx);
+                mx = 1;
+            } else {
+                mx++;
+            }
+            N = (N >> 1);
+        }
+        return ans;
+    }
+
+    public static int[] distributeCandies(int c, int p) {
+        int[] ans = new int[p];
+        int s = 1, i = 0;
+        while (c - s > 0) {
+            ans[i] += s;
+            c -= s;
+            s++;
+            i++;
+            i %= p;
+        }
+        ans[i] += c;
+        return ans;
+    }
+
+    public static int bitwiseComplement(int N) {
+        if (N == 0)
+            return 1;
+        int k = 0;
+        int ans = 0;
+        while (N != 0 && k < 32) {
+            if ((N & 1) == 0) {
+                ans = (ans | (1 << k));
+            }
+            N = (N >> 1);
+            k++;
+        }
+        return ans;
+    }
+
+    public static int projectionArea(int[][] grid) {
+        int N = grid.length;
+        int ans = 0;
+
+        for (int i = 0; i < N; ++i) {
+            int bestRow = 0; // largest of grid[i][j]
+            int bestCol = 0; // largest of grid[j][i]
+            for (int j = 0; j < N; ++j) {
+                if (grid[i][j] > 0)
+                    ans++; // top shadow
+                bestRow = Math.max(bestRow, grid[i][j]);
+                bestCol = Math.max(bestCol, grid[j][i]);
+            }
+            ans += bestRow + bestCol;
+        }
+
+        return ans;
+    }
+
+    public static double largestTriangleArea(int[][] points) {
+        int N = points.length;
+        double ans = 0;
+        for (int i = 0; i < N; ++i)
+            for (int j = i + 1; j < N; ++j)
+                for (int k = j + 1; k < N; ++k)
+                    ans = Math.max(ans, area(points[i], points[j], points[k]));
+        return ans;
+    }
+
+    public static double area(int[] P, int[] Q, int[] R) {
+        return 0.5 * Math.abs(P[0] * Q[1] + Q[0] * R[1] + R[0] * P[1] - P[1] * Q[0] - Q[1] * R[0] - R[1] * P[0]);
+    }
+
+    public static int largestPerimeter(int[] A) {
+        if (A.length < 3)
+            return 0;
+        Arrays.sort(A);
+        int a = A.length;
+        while (a != 2) {
+            if (A[a - 3] + A[a - 2] > A[a - 1])
+                return (A[a - 3] + A[a - 2] + A[a - 1]);
+            a--;
+        }
+        return 0;
+    }
+
+    public static int[] getNoZeroIntegers(int n) {
+        int[] ans = new int[2];
+        int i = 1, j = n - 1;
+        while (i <= j) {
+            if (isNoZero(i, j)) {
+                ans[0] = i;
+                ans[1] = j;
+                return ans;
+            }
+            i++;
+            j--;
+        }
+        return ans;
+    }
+
+    public static Boolean isNoZero(int a, int b) {
+        while (a > 0 || b > 0) {
+            if (a > 0 && a % 10 == 0)
+                return false;
+            if (b > 0 && b % 10 == 0)
+                return false;
+            a /= 10;
+            b /= 10;
+        }
+        return true;
+    }
+
+    public static boolean isHappy(int n) {
+        int slow = n, fast = n, ct = 0;
+        while (ct == 0 || fast != slow) {
+            slow = sqSum(slow);
+            fast = sqSum(fast);
+            fast = sqSum(fast);
+            ct++;
+        }
+        if (fast == 1)
+            return true;
+        return false;
+    }
+
+    public static boolean isHappyBest(int n) {
+        int slow = n, fast = n;
+        do {
+            slow = sqSum(slow);
+            fast = sqSum(fast);
+            fast = sqSum(fast);
+        } while (fast != slow);
+        if (fast == 1)
+            return true;
+        return false;
+    }
+
+    public static int sqSum(int n) {
+        int ans = 0;
+        while (n != 0) {
+            ans += ((n % 10) * (n % 10));
+            n /= 10;
+        }
+        return ans;
+    }
+
+    public static int minMoves(int[] nums) {
+        int min_ = Integer.MAX_VALUE;
+        int ans = 0;
+        for (int i = 0; i < nums.length; i++) {
+            min_ = Math.min(nums[i], min_);
+        }
+        for (int i = 0; i < nums.length; i++) {
+            ans += nums[i] - min_;
+        }
+        return ans;
+    }
+
+    public static int maxCount(int m, int n, int[][] ops) {
+        for (int i = 0; i < ops.length; i++) {
+            m = Math.min(m, ops[i][0]);
+            n = Math.min(n, ops[i][1]);
+        }
+        return m * n;
     }
 
     // **********************************HELPER FUNCTIONS LIKE
