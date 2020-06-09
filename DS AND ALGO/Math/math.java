@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Arrays;
 
 public class math {
     public static void main(String[] args) {
@@ -83,8 +84,23 @@ public class math {
          * int[] nums={1,2,3}; //Inverse approach System.out.println(minMoves(nums));
          */
         // LEETCODE 598
-        int[][] ops={{2,2},{3,3}};
-        System.out.println(maxCount(3, 3, ops));
+        /*
+         * int[][] ops={{2,2},{3,3}}; System.out.println(maxCount(3, 3, ops));
+         */
+        // LEETCODE 628
+        /*
+         * in1[] nums={-45,1,52,36}; System.out.println(maximumProduct(nums));
+         */
+        // LEETCODE
+        /*
+        System.out.println(isPowerOfTwo(256));
+        */
+        // LEETCODE 326
+        /*
+         * System.out.println(isPowerOfThree(243));
+         */
+        // LEETCODE 
+        System.out.println(isPerfectSquare(2147483647));
     }
 
     public static int subtractProductAndSum(int n) {
@@ -213,7 +229,7 @@ public class math {
                 if (g == -1)
                     g = count[i];
                 else
-                    g = gcd(g, count[i]);
+                    g = GCD(g, count[i]);
             }
 
         return g >= 2;
@@ -418,6 +434,31 @@ public class math {
             n = Math.min(n, ops[i][1]);
         }
         return m * n;
+    }
+
+    public static int maximumProduct(int[] nums) {
+        Arrays.sort(nums);
+
+        return Math.max(nums[0] * nums[1] * nums[nums.length - 1],
+                nums[nums.length - 1] * nums[nums.length - 2] * nums[nums.length - 3]);
+    }
+
+    public static boolean isPowerOfTwo(int n) {
+        if (n == 0 || n == Integer.MIN_VALUE)
+            return false;
+        return ((n & (n - 1)) == 0);
+    }
+
+    public static boolean isPowerOfThree(int n) {
+        return n > 0 && 1162261467 % n == 0;
+    }
+
+    public static boolean isPerfectSquare(int num) {
+        for (long i = 1; i * i <= num; i++) {   // long is because i*i may be out of integer range
+            if (i * i == num)
+                return true;
+        }
+        return false;
     }
 
     // **********************************HELPER FUNCTIONS LIKE
