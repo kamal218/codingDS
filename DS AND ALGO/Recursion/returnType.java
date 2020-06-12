@@ -3,7 +3,7 @@
 import java.util.Arrays;
 import java.util.ArrayList;
 
-public class basicRec {
+public class returnType {
     public static void main(String[] args) {
         solve();
     }
@@ -43,7 +43,7 @@ public class basicRec {
         // System.out.print(subsequences("abc"));
         // System.out.println(subsequence1("abc"));
         // System.out.println(permutation("abc"));
-        System.out.println(permutationWithoutRep(str));
+        // System.out.println(permutationWithoutRep(str));
 
         // MAZEPATH TYPE
         // System.out.println(mazepath_HVD(0, 0, 3, 3));
@@ -63,6 +63,28 @@ public class basicRec {
         // -----------
         // int[][] ans = new int[8][8];
         // knights_fill(0, 0, 64, 1, dirKnight, ans);
+
+        // JUMP GAMES RELATED
+        // System.out.println(diceMoves(10, 1));
+        // int[] arr={2,3,5,7};
+        // System.out.println(arrayMove(1, arr, 10));
+
+        // TOWER OF HANOI
+        // towerOfHanoi(4, 'A', 'B', 'H');
+
+        // NOKIA KEYPAD
+        // String[] keys = { ".","abc", "def", "ghi", "jkl", "mno", "pqr", "stu", "vwx",
+        // "yz" };
+        // System.out.print(nokiaKeypadModel_01(keys, "173") );
+
+        // ENCODING
+        // System.out.println(encoding("10"));
+
+        // SUDOKU
+        int[][] board = { { 3, 0, 6, 5, 0, 8, 4, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 8, 7, 0, 0, 0, 0, 3, 1 },
+                { 0, 0, 3, 0, 1, 0, 0, 8, 0 }, { 9, 0, 0, 8, 6, 3, 0, 0, 5 }, { 0, 5, 0, 0, 9, 0, 6, 0, 0 },
+                { 1, 3, 0, 0, 0, 0, 2, 5, 0 }, { 0, 0, 0, 0, 0, 0, 0, 7, 4 }, { 0, 0, 5, 2, 0, 6, 3, 0, 0 } };
+        sudoku(board,0);
     }
 
     public static void printIncUp(int s, int n) {
@@ -345,6 +367,138 @@ public class basicRec {
         }
         ans[sr][sc] = 0;
         return res;
+    }
+
+    public static ArrayList<String> diceMoves(int n, int st) {
+        if (st == n) {
+            ArrayList<String> base = new ArrayList<>();
+            base.add("");
+            return base;
+        }
+
+        ArrayList<String> ans = new ArrayList<>();
+        for (int i = 1; i <= 6 && st + i <= n; i++) {
+            ArrayList<String> recAns = diceMoves(n, st + i);
+            for (String s : recAns)
+                ans.add(i + s);
+        }
+        return ans;
+    }
+
+    public static ArrayList<String> arrayMove(int st, int[] arr, int n) {
+        if (st == n) {
+            ArrayList<String> base = new ArrayList<>();
+            base.add("");
+            return base;
+        }
+        ArrayList<String> ans = new ArrayList<String>();
+        for (int i = 0; i < arr.length && st + arr[i] <= n; i++) {
+            ArrayList<String> recAns = arrayMove(st + arr[i], arr, n);
+            for (String s : recAns)
+                ans.add(arr[i] + s);
+        }
+        return ans;
+    }
+
+    public static void towerOfHanoi(int disk, char a, char b, char help) {
+        if (disk == 1)
+            return;
+        towerOfHanoi(disk - 1, a, b, help);
+        System.out.println("disk:" + (disk - 1) + "moved to" + "help");
+        System.out.println("disk:" + disk + "moved to" + "b");
+        System.out.println("disk" + (disk - 1) + "moved to" + b);
+    }
+
+    public static ArrayList<String> nokiaKeypadModel_01(String[] keys, String str) {
+        if (str.length() == 0) {
+            ArrayList<String> base = new ArrayList<>();
+            base.add("");
+            return base;
+        }
+        ArrayList<String> ans = new ArrayList<>();
+        ArrayList<String> recAns = nokiaKeypadModel_01(keys, str.substring(1));
+        for (int i = 0; i < keys[str.charAt(0) - '0'].length(); i++) {
+            for (String s : recAns) {
+                ans.add(keys[str.charAt(0) - '0'].charAt(i) + s);
+            }
+        }
+        return ans;
+    }
+
+    public static ArrayList<String> encoding(String str) {
+        if (str.length() == 0) {
+            ArrayList<String> base = new ArrayList<>();
+            base.add("");
+            return base;
+        }
+        ArrayList<String> ans = new ArrayList<>();
+        int ch = str.charAt(0) - '0';
+        if (ch == '0') {
+            ArrayList<String> recAns = encoding(str.substring(1));
+        }
+        if (ch > 0 && ch < 10) {
+            ArrayList<String> recAns = encoding(str.substring(1));
+            for (String s : recAns) {
+                ans.add((char) (ch - 1 + 'a') + s);
+            }
+        }
+        if (str.length() > 1) {
+            int ch1 = str.charAt(1) - '0';
+            int num = ch * 10 + ch1;
+            if (num > 9 && num < 27) {
+                ArrayList<String> recAns = encoding(str.substring(2));
+                for (String s : recAns) {
+                    ans.add((char) (num - 1 + 'a') + s);
+                }
+            }
+        }
+        return ans;
+    }
+
+    public static Boolean isSafeForSudoku(int[][] board, int r, int c, int num) {
+        for (int i = 0; i < board[0].length; i++) {
+            if (board[r][i] == num)
+                return false;
+        }
+        for (int i = 0; i < board.length; i++) {
+            if (board[i][c] == num)
+                return false;
+        }
+        int row = (r / 3) * 3;
+        int col = (c / 3) * 3;
+        for (int i = row; i < row + 3; i++) {
+            for (int j = col; j < col + 3; j++) {
+                if (board[i][j] == num)
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    public static void sudoku(int[][] board,int idx) {
+        if(idx==board.length*board[0].length){
+            for(int[] arr:board){
+                for(int ele:arr){
+                    System.out.print(ele+" ");
+                }
+                System.out.println();
+            }
+            System.out.println("///////////////////////");
+            return;
+        }
+        int r=(idx/board.length);
+        int c=(idx%board.length);
+        if(board[r][c]==0){
+            for(int i=1;i<10;i++){
+                if(isSafeForSudoku(board, r, c, i)){
+                    board[r][c]=i;
+                    sudoku(board, idx+1);
+                    board[r][c]=0;
+                }
+            }
+        }
+        else
+        sudoku(board, idx+1);
     }
 
     /*********************** HELPER FUNCTIONS ****************************/
