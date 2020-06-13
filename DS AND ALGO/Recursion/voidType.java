@@ -28,8 +28,29 @@ public class voidType {
         // Boolean[] boxes=new Boolean[4];
         // Arrays.fill(boxes,false);
         // System.out.println(nQueenWaysPer(boxes, 2, 0, ""));
-        System.out.println(nQueenWaysCom(4, 2, 0, -1, ""));
-       
+        // System.out.println(nQueenWaysCom(4, 2, 0, 0, ""));
+        // System.out.println(nQueenWaysCom_sub(4, 2, 0, 0, ""));
+        // Boolean[] box=new Boolean[4];
+        // Arrays.fill(box,false);
+        // System.out.println(nQueenWaysper_sub(box, 2, 0, 0, ""));
+
+        // NQUEENS
+        // Boolean[][] board = new Boolean[4][4];
+        // for (Boolean[] ar : board)
+        // Arrays.fill(ar, false);
+        // System.out.println(nQueen(board, 0, 0, ""));
+
+        // COIN CHANGE ALL VARIATIONS
+        // int[] arr = { 2, 3, 5, 7 };
+        // System.out.println(coin_change_per_01(arr, 10, ""));
+        // System.out.println(coin_change_com_01(arr, 10, 0, ""));
+        // System.out.println(coin_change_com_02(arr, 10, 0, ""));
+        // Boolean[] isSelected=new Boolean[arr.length];
+        // Arrays.fill(isSelected,false);
+        // System.out.println(coin_change_per_02(arr, isSelected,10, ""));
+        // System.out.println(coin_change_per_03(arr, 10, 0, ""));
+        // System.out.println(coin_change_com_03(arr, 10, 0, ""));
+
     }
 
     public static void removeHi(String str, String ans) {
@@ -180,23 +201,187 @@ public class voidType {
         int count = 0;
         for (int i = 0; i < boxes.length; i++) {
             if (!boxes[i]) {
-                boxes[i]=true;
+                boxes[i] = true;
                 count += nQueenWaysPer(boxes, tnq, qpsf + 1, ans + i + " ");
-                boxes[i]=false;
+                boxes[i] = false;
             }
         }
         return count;
     }
-    public static int nQueenWaysCom(int boxes,int tnq,int qpsf,int vidx,String ans){
-        if(tnq==qpsf){
-            System.out.println(ans+" ");
+
+    public static int nQueenWaysCom(int boxes, int tnq, int qpsf, int vidx, String ans) {
+        if (tnq == qpsf) {
+            System.out.println(ans + " ");
             return 1;
         }
-        int count=0;
-        for(int i=vidx+1;i<boxes;i++){
-            if(vidx+1<boxes)
-            count+=nQueenWaysCom(boxes, tnq, qpsf+1, i, ans+i+" ");
+        int count = 0;
+        for (int i = vidx; i < boxes; i++) {
+            count += nQueenWaysCom(boxes, tnq, qpsf + 1, i + 1, ans + i + " ");
         }
+        return count;
+    }
+
+    public static int nQueenWaysCom_sub(int box, int tnq, int qpsf, int vidx, String ans) {
+        if (vidx == box || tnq == qpsf) {
+            if (qpsf == tnq) {
+                System.out.println(ans);
+                return 1;
+            }
+            return 0;
+        }
+        int count = 0;
+        count += nQueenWaysCom_sub(box, tnq, qpsf + 1, vidx + 1, ans + vidx + " ");
+        count += nQueenWaysCom_sub(box, tnq, qpsf, vidx + 1, ans);
+        return count;
+    }
+
+    public static int nQueenWaysper_sub(Boolean[] box, int tnq, int qpsf, int vidx, String ans) {
+        if (tnq == qpsf || vidx == box.length) {
+            if (tnq == qpsf) {
+                System.out.println(ans);
+                return 1;
+            }
+            return 0;
+        }
+        int count = 0;
+        if (!box[vidx]) {
+            box[vidx] = true;
+            count += nQueenWaysper_sub(box, tnq, qpsf + 1, 0, ans + vidx + " ");
+            box[vidx] = false;
+        }
+        count += nQueenWaysper_sub(box, tnq, qpsf, vidx + 1, ans);
+        return count;
+    }
+
+    public static Boolean isQueenSafe(Boolean[][] board, int r, int c) {
+        int[][] dir = { { 0, -1 }, { -1, -1 }, { -1, 0 }, { -1, 1 } };
+        for (int i = 0; i < dir.length; i++) {
+            for (int rad = 1; rad < board.length; rad++) {
+                int x = r + rad * dir[i][0];
+                int y = c + rad * dir[i][1];
+                if (x >= 0 && y >= 0 && x < board.length && y < board[0].length && board[x][y])
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    public static int nQueen(Boolean[][] board, int qpsf, int vidx, String ans) {
+        if (vidx == board.length * board[0].length)
+            return 0;
+        if (qpsf == board.length) {
+            System.out.println(ans);
+            return 1;
+        }
+        int count = 0;
+        for (int i = vidx; i < board.length * board[0].length; i++) {
+            int r = i / board.length;
+            int c = i % board.length;
+            if (isQueenSafe(board, r, c)) {
+                System.out.println(r + " " + c);
+                board[r][c] = true;
+                count += nQueen(board, qpsf + 1, i + 1, ans + r + " " + c + "\t");
+                board[r][c] = false;
+            }
+        }
+        return count;
+    }
+
+    public static int coin_change_per_01(int[] arr, int tar, String ans) {
+        if (tar == 0) {
+            System.out.println(ans);
+            return 1;
+        }
+        int count = 0;
+        for (int i = 0; i < arr.length; i++) {
+            if (tar - arr[i] >= 0) {
+                count += coin_change_per_01(arr, tar - arr[i], ans + arr[i] + " ");
+            }
+        }
+        return count;
+    }
+
+    public static int coin_change_com_01(int[] arr, int tar, int vidx, String ans) {
+        if (tar == 0 || vidx == arr.length) {
+            if (tar == 0) {
+                System.out.println(ans);
+                return 1;
+            }
+            return 0;
+        }
+
+        int count = 0;
+        for (int i = vidx; i < arr.length; i++) {
+            if (tar - arr[i] >= 0) {
+                count += coin_change_com_01(arr, tar - arr[i], i, ans + arr[i] + " ");
+            }
+        }
+        return count;
+    }
+
+    public static int coin_change_com_02(int[] arr, int tar, int vidx, String ans) {
+        if (tar == 0 || vidx == arr.length) {
+            if (tar == 0) {
+                System.out.println(ans);
+                return 1;
+            }
+            return 0;
+        }
+
+        int count = 0;
+        for (int i = vidx; i < arr.length; i++) {
+            if (tar - arr[i] >= 0) {
+                count += coin_change_com_02(arr, tar - arr[i], i + 1, ans + arr[i] + " ");
+            }
+        }
+        return count;
+    }
+
+    public static int coin_change_per_02(int[] arr, Boolean[] isSelected, int tar, String ans) {
+        if (tar == 0) {
+            System.out.println(ans);
+            return 1;
+        }
+        int count = 0;
+        for (int i = 0; i < arr.length; i++) {
+            if (tar - arr[i] >= 0 && !isSelected[i]) {
+                isSelected[i] = true;
+                count += coin_change_per_02(arr, isSelected, tar - arr[i], ans + arr[i]);
+                isSelected[i] = false;
+            }
+        }
+        return count;
+    }
+
+    public static int coin_change_per_03(int[] arr, int tar, int vidx, String ans) {
+        if (tar == 0 || vidx == arr.length) {
+            if (tar == 0) {
+                System.out.println(ans);
+                return 1;
+            }
+            return 0;
+        }
+        int count = 0;
+        if (tar - arr[vidx] >= 0) {
+            count += coin_change_per_03(arr, tar - arr[vidx], 0, ans + arr[vidx] + " ");
+        }
+        count += coin_change_per_03(arr, tar, vidx + 1, ans);
+        return count;
+    }
+
+    public static int coin_change_com_03(int[] arr, int tar, int vidx, String ans) {
+        if (tar == 0 || vidx == arr.length) {
+            if (tar == 0) {
+                System.out.println(ans);
+                return 1;
+            }
+            return 0;
+        }
+        int count = 0;
+        if (tar - arr[vidx] >= 0) {
+            count += coin_change_com_03(arr, tar - arr[vidx], vidx, ans + arr[vidx] + " ");
+        }
+        count += coin_change_com_03(arr, tar, vidx + 1, ans);
         return count;
     }
 }
