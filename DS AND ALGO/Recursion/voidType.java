@@ -50,6 +50,8 @@ public class voidType {
         // System.out.println(coin_change_per_02(arr, isSelected,10, ""));
         // System.out.println(coin_change_per_03(arr, 10, 0, ""));
         // System.out.println(coin_change_com_03(arr, 10, 0, ""));
+        int[] arr={10,20,30};
+        System.out.println(equiSet(arr, 0, 0, "", "", 0));
 
     }
 
@@ -382,6 +384,21 @@ public class voidType {
             count += coin_change_com_03(arr, tar - arr[vidx], vidx, ans + arr[vidx] + " ");
         }
         count += coin_change_com_03(arr, tar, vidx + 1, ans);
+        return count;
+    }
+
+    public static int equiSet(int[] arr, int sum1, int sum2, String ans1, String ans2, int vidx) {
+      //  System.out.println(sum1+ " " + sum2);
+        if (vidx == arr.length) {
+            if (sum1 == sum2) {
+                System.out.println("[" + ans1 + "]" + "=" + "[" + ans2 + "]");
+                return 1;
+            }
+            return 0;
+        }
+        int count = 0;
+        count+=equiSet(arr, sum1+arr[vidx], sum2, ans1+arr[vidx]+" ", ans2, vidx+1);
+        count+=equiSet(arr, sum1, sum2+arr[vidx], ans1, ans2+arr[vidx]+" ", vidx+1);
         return count;
     }
 }

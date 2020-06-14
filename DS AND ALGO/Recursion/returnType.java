@@ -81,10 +81,13 @@ public class returnType {
         // System.out.println(encoding("10"));
 
         // SUDOKU
-        int[][] board = { { 3, 0, 6, 5, 0, 8, 4, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 8, 7, 0, 0, 0, 0, 3, 1 },
-                { 0, 0, 3, 0, 1, 0, 0, 8, 0 }, { 9, 0, 0, 8, 6, 3, 0, 0, 5 }, { 0, 5, 0, 0, 9, 0, 6, 0, 0 },
-                { 1, 3, 0, 0, 0, 0, 2, 5, 0 }, { 0, 0, 0, 0, 0, 0, 0, 7, 4 }, { 0, 0, 5, 2, 0, 6, 3, 0, 0 } };
-        sudoku(board,0);
+        // int[][] board = { { 3, 0, 6, 5, 0, 8, 4, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 8, 7, 0, 0, 0, 0, 3, 1 },
+                // { 0, 0, 3, 0, 1, 0, 0, 8, 0 }, { 9, 0, 0, 8, 6, 3, 0, 0, 5 }, { 0, 5, 0, 0, 9, 0, 6, 0, 0 },
+                // { 1, 3, 0, 0, 0, 0, 2, 5, 0 }, { 0, 0, 0, 0, 0, 0, 0, 7, 4 }, { 0, 0, 5, 2, 0, 6, 3, 0, 0 } };
+        // sudoku(board,0);
+
+        // LEETCODE 
+        System.out.println(letterCasePermutation("a1b2"));
     }
 
     public static void printIncUp(int s, int n) {
@@ -499,6 +502,42 @@ public class returnType {
         }
         else
         sudoku(board, idx+1);
+    }
+    public static ArrayList<String> letterCasePermutation(String S) {
+        return per(S);
+    }
+    public static ArrayList<String> per(String s){
+        if(s.length()==0){
+            ArrayList<String> base=new ArrayList<>();
+            base.add("");
+            return base;
+        }
+        ArrayList<String> ans=new ArrayList<>();
+        char ch=s.charAt(0);
+        if(ch-'0'<10 && ch-'0'>=0)
+        {
+            ArrayList<String> recAns=per(s.substring(1));
+            for(String st:recAns)
+                ans.add(ch+st);
+        }
+        else 
+        {
+            ArrayList<String> recAns=per(s.substring(1));
+            for(String st:recAns)
+                ans.add(ch+st);
+            ch=revCase(ch);
+            for(String st:recAns)
+                ans.add(ch+st);
+        }
+        return ans;
+    }
+    public static char revCase(char ch){
+        if(ch-'a'>=0 && ch-'z'<=0)
+            return (char)(ch-32);
+        else if(ch-'A'>=0 && ch-'Z'<=0)
+            return (char)(ch+32);
+        else
+            return ch;
     }
 
     /*********************** HELPER FUNCTIONS ****************************/
