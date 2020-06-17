@@ -50,8 +50,12 @@ public class voidType {
         // System.out.println(coin_change_per_02(arr, isSelected,10, ""));
         // System.out.println(coin_change_per_03(arr, 10, 0, ""));
         // System.out.println(coin_change_com_03(arr, 10, 0, ""));
-        int[] arr={10,20,30};
-        System.out.println(equiSet(arr, 0, 0, "", "", 0));
+        // int[] arr = { 10, 20, 30 };
+        // System.out.println(equiSet(arr, 0, 0, "", "", 0));
+
+        // CRYPTO
+        System.out.println(crypto());
+        
 
     }
 
@@ -287,6 +291,8 @@ public class voidType {
             }
         }
         return count;
+        // /* This is a // // comment */
+        /* This is also a comment /* More comments */
     }
 
     public static int coin_change_per_01(int[] arr, int tar, String ans) {
@@ -388,7 +394,7 @@ public class voidType {
     }
 
     public static int equiSet(int[] arr, int sum1, int sum2, String ans1, String ans2, int vidx) {
-      //  System.out.println(sum1+ " " + sum2);
+        // System.out.println(sum1+ " " + sum2);
         if (vidx == arr.length) {
             if (sum1 == sum2) {
                 System.out.println("[" + ans1 + "]" + "=" + "[" + ans2 + "]");
@@ -397,8 +403,64 @@ public class voidType {
             return 0;
         }
         int count = 0;
-        count+=equiSet(arr, sum1+arr[vidx], sum2, ans1+arr[vidx]+" ", ans2, vidx+1);
-        count+=equiSet(arr, sum1, sum2+arr[vidx], ans1, ans2+arr[vidx]+" ", vidx+1);
+        count += equiSet(arr, sum1 + arr[vidx], sum2, ans1 + arr[vidx] + " ", ans2, vidx + 1);
+        count += equiSet(arr, sum1, sum2 + arr[vidx], ans1, ans2 + arr[vidx] + " ", vidx + 1);
         return count;
+    }
+
+    static String str1 = "send";
+    static String str2 = "more";
+    static String str3 = "money";
+    static boolean[] isUsedNum = new boolean[10];
+    static int[] map = new int[26];
+
+    public static int decode(String str) {
+        int ans = 0;
+        for (int i = 0; i < str.length(); i++) {
+            ans = ans*10+map[str.charAt(i) - 'a'] ;
+        }
+        return ans;
+    }
+
+    public static int crypto_(String str) {
+        if (str.length() == 0) {
+            int a = decode(str1);
+            int b = decode(str2);
+            int c = decode(str3);
+            if (a + b == c) {
+                System.out.println(a + "+" + b + "=" + c);
+                return 1;
+            }
+            return 0;
+        }
+        int count=0,ct=0;
+        for (int i = 0; i < 10; i++) {
+            if((str.charAt(0)==str1.charAt(0) || str.charAt(0)==str2.charAt(0)|| str.charAt(0)==str3.charAt(0))&& ct==0){
+                ct=1;
+            i=1;
+            }
+            if (!isUsedNum[i]  ) {
+                isUsedNum[i] = true;
+                map[str.charAt(0) - 'a'] = i;
+                count+=crypto_(str.substring(1));
+                isUsedNum[i] = false;
+            }
+        }
+        return count;
+    }
+
+    public static int crypto() {
+        String str = str1 + str2 + str3;
+        int[] freq = new int[26];
+        for (int i = 0; i < str.length(); i++) {
+            freq[str.charAt(i) - 'a']++;
+        }
+        String res = "";
+        for (int i = 0; i < 26; i++) {
+            if (freq[i] != 0) {
+                res += (char) (i + 'a');
+            }
+        }
+       return crypto_(res);
     }
 }
