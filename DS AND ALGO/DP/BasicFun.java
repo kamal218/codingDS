@@ -114,18 +114,28 @@ class BasicFun {
         // System.out.println(unBoundedKnapSack(w, m, cap));
 
         // SET_05(String based)
-        String str = "abccbc";
+        // String str = "abccbc";
         // boolean[][] dp = new boolean[str.length()][str.length()];
         // System.out.println(allPallindromicSubstring(str, dp));
         // System.out.println(longetsPalindromicSubstring(str, dp));
-        int[][] dp = new int[str.length()][str.length()];
+        // int[][] dp = new int[str.length()][str.length()];
         // System.out.println(longestPalindromicSubstring_01(str, dp));
         // System.out.println(longestPalindromicSubstring_02(str));
         // System.out.println(longetsPalindromicSubseq(str, dp));
         // System.out.println(allPallindromicSubstring_01(str));
-        System.out.println(allPallindromicSubseq(str, dp));
+        // System.out.println(allPallindromicSubseq(str, dp));
+        // System.out.println(longestCommonSubsequence("abc", "ace"));
+        // String str1 = "ssunday";
+        // String str2 = "sunday";
+        // int[][] dp = new int[str1.length()][str2.length()];
+        // System.out.println(longestCommonSubsequence_memo("saturday", "sunday", dp));
+        // System.out.println(longestCommonSubsequence_DP(str1, str2, dp));
+        // System.out.println(longestCommonSubstring(str1, str2, 0));
+        // System.out.println(longestCommonSubstring_memo(str1, str2, 0, dp));
+        // System.out.println(stringOccurAsSubsequneceInAnotherString("ADX", "AGDFTY"));
+        System.out.println(stringOccurAsSubsequneceInAnotherString_it("ADXY", "ADGCDX"));
         // display1D(dp);
-        display2D(dp);
+        // display2D(dp);
     }
 
     public static int fib_01(int n, int[] dp) {
@@ -636,6 +646,7 @@ class BasicFun {
         display1D(dp);
         return dp[cap];
     }
+    // */****************************************************************************/
 
     public static int allPallindromicSubstring(String str, boolean[][] dp) {
         int count = 0;
@@ -800,6 +811,110 @@ class BasicFun {
             }
         }
         return dp[0][str.length() - 1];
+    }
+
+    public static int longestCommonSubsequence(String str1, String str2) {
+        if (str1.length() == 0 || str2.length() == 0)
+            return 0;
+        if (str1.charAt(0) == str2.charAt(0)) // if characters are
+            return longestCommonSubsequence(str1.substring(1), str2.substring(1)) + 1;
+        return Math.max(longestCommonSubsequence(str1.substring(1), str2), // if characters are unequal then 2
+                                                                           // possibilities
+                longestCommonSubsequence(str1, str2.substring(1)));
+    }
+
+    public static int longestCommonSubsequence_memo(String str1, String str2, int[][] dp) {
+        if (str1.length() == 0 || str2.length() == 0)
+            return 0;
+
+        if (dp[dp.length - str1.length()][dp[0].length - str2.length()] != 0)
+            return dp[dp.length - str1.length()][dp[0].length - str2.length()];
+
+        int ans = 0;
+
+        if (str1.charAt(0) == str2.charAt(0))
+            ans = longestCommonSubsequence_memo(str1.substring(1), str2.substring(1), dp) + 1;
+        else
+            ans = Math.max(longestCommonSubsequence_memo(str1.substring(1), str2, dp),
+                    longestCommonSubsequence_memo(str1, str2.substring(1), dp));
+
+        dp[dp.length - str1.length()][dp[0].length - str2.length()] = ans;
+        return ans;
+    }
+
+    public static int longestCommonSubsequence_DP(String str1, String str2, int[][] dp) {
+
+        for (int i = str1.length() - 1; i >= 0; i--) {
+            for (int j = str2.length() - 1; j >= 0; j--) {
+
+                if (str1.charAt(i) == str2.charAt(j))
+                    dp[i][j] = dp[i + 1][j + 1] + 1;
+                else
+                    dp[i][j] = Math.max(dp[i + 1][j], dp[i][j + 1]);
+
+            }
+        }
+        return dp[0][0];
+    }
+
+    static int maxLen = 0;
+
+    public static int longestCommonSubstring(String str1, String str2, int count) {
+        if (str1.length() == 0 || str2.length() == 0)
+            return count;
+        if (str1.charAt(0) == str2.charAt(0)) {
+            count = longestCommonSubstring(str1.substring(1), str2.substring(1), count + 1);
+        }
+        count = Math.max(Math.max(longestCommonSubstring(str1.substring(1), str2, 0),
+                longestCommonSubstring(str1, str2.substring(1), 0)), count);
+        return count;
+    }
+
+    public static int longestCommonSubstring_memo(String str1, String str2, int count, int[][] dp) {
+        if (str1.length() == 0 || str2.length() == 0)
+            return count;
+        if (dp[dp.length - str1.length()][dp[0].length - str2.length()] != 0)
+            return dp[dp.length - str1.length()][dp[0].length - str2.length()];
+        if (str1.charAt(0) == str2.charAt(0)) {
+            count = longestCommonSubstring_memo(str1.substring(1), str2.substring(1), count + 1, dp);
+        }
+        count = Math.max(Math.max(longestCommonSubstring_memo(str1.substring(1), str2, 0, dp),
+                longestCommonSubstring_memo(str1, str2.substring(1), 0, dp)), count);
+        dp[dp.length - str1.length()][dp[0].length - str2.length()] = count;
+        return count;
+    }
+
+    // public static int longestCommonSubstring_DP(String str1, String str2) {
+    // int count = 0;
+    // for (int i = str1.length() - 1; i >= 0; i--) {
+    // for (int j = str2.length(); j >= 0; j--) {
+    // if(str1.charAt(i)==str2.charAt(j)){
+    // count=dp[i+1][j+1]+1;
+    // }
+    // }
+    // }
+    // return dp[0][0];
+    // }
+    public static boolean stringOccurAsSubsequneceInAnotherString(String str1, String str2) {
+        if (str1.length() == 0)
+            return true;
+        if (str2.length() == 0)
+            return false;
+        if (str1.charAt(0) == str2.charAt(0))
+            return stringOccurAsSubsequneceInAnotherString(str1.substring(1), str2.substring(1));
+        else
+            return stringOccurAsSubsequneceInAnotherString(str1, str2.substring(1));
+    }
+
+    public static boolean stringOccurAsSubsequneceInAnotherString_it(String str1, String str2) {
+        int i = 0, j = 0;
+        while (i < str1.length() && j < str2.length()) {
+            if(str1.charAt(i)==str2.charAt(j))
+            i++;
+            else
+            j++;
+        }
+        return i==str1.length();
     }
 
     // *****************************************************************/
