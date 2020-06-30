@@ -133,7 +133,35 @@ class BasicFun {
         // System.out.println(longestCommonSubstring(str1, str2, 0));
         // System.out.println(longestCommonSubstring_memo(str1, str2, 0, dp));
         // System.out.println(stringOccurAsSubsequneceInAnotherString("ADX", "AGDFTY"));
-        System.out.println(stringOccurAsSubsequneceInAnotherString_it("ADXY", "ADGCDX"));
+        // System.out.println(stringOccurAsSubsequneceInAnotherString_it("ADXY",
+        // "ADGCDX"));
+
+        // LIS TYPE
+        // int[] arr = { 10, 9, 2, 5, 3, 4 };
+        // int[] arr={10,9,2,5,3,7,101,18};
+        // int[] arr = { 1, 3, 6, 7, 9, 4, 10, 5, 6 };
+        // int[] arr = { 10, 22, 9, 33, 21, 50, 41, 60, 80 };
+        // int[] arr = { 80, 60, 41, 50, 21, 33, 9, 22, 10 };
+
+        // int ans = 0;
+        // for(int i=0;i<arr.length;i++){
+        // ans=Math.max(ans,LIS_01(arr, i));
+        // }
+        // int[] dp = new int[arr.length];
+        // for (int i = 0; i < arr.length; i++) {
+        // ans = Math.max(ans, LIS_memo(arr, i, dp));
+        // }
+        // System.out.println(ans);
+        // System.out.println(LIS_DP(arr));
+        // System.out.println(countOfLIS(arr));
+        // System.out.println(LDS_DP(arr));
+        // System.out.println(LBS(arr));
+        int[] arr={1,101,2,3,100,4,5};
+        System.out.println(maxSumIncSubseq(arr));
+
+        // MISCELLANEOUS
+        // int[] arr = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        // display1D(arrayBlockSum(arr, 2)); // sum of k elements from left and right
         // display1D(dp);
         // display2D(dp);
     }
@@ -909,12 +937,197 @@ class BasicFun {
     public static boolean stringOccurAsSubsequneceInAnotherString_it(String str1, String str2) {
         int i = 0, j = 0;
         while (i < str1.length() && j < str2.length()) {
-            if(str1.charAt(i)==str2.charAt(j))
-            i++;
+            if (str1.charAt(i) == str2.charAt(j))
+                i++;
             else
-            j++;
+                j++;
         }
-        return i==str1.length();
+        return i == str1.length();
+    }
+
+    /***************************************************************/
+    public static int LIS_01(int[] arr, int idx) {
+        if (idx == arr.length) {
+            return 0;
+        }
+        int ans = 0;
+        for (int i = idx + 1; i < arr.length; i++) {
+            if (arr[i] > arr[idx]) {
+                ans = Math.max(ans, LIS_01(arr, i));
+            }
+        }
+        return ans + 1;
+    }
+
+    public static int LIS_memo(int[] arr, int idx, int[] dp) {
+        if (idx == arr.length) {
+            return 0;
+        }
+        if (dp[idx] != 0)
+            return dp[idx];
+        int ans = 0;
+        for (int i = idx + 1; i < arr.length; i++) {
+            if (arr[i] > arr[idx]) {
+                ans = Math.max(ans, LIS_memo(arr, i, dp));
+            }
+        }
+        dp[idx] = ans + 1;
+        return ans + 1;
+    }
+
+    public static int LIS_DP(int[] arr) {
+        int[] dp = new int[arr.length];
+        String[] paths = new String[arr.length];
+        int ans = 0;
+        dp[0] = 1;
+        paths[0] = arr[0] + "";
+        for (int i = 1; i < arr.length; i++) {
+            paths[i] = arr[i] + "";
+            dp[i] = 1;
+            for (int j = i - 1; j >= 0; j--) {
+                if (arr[j] < arr[i] && dp[j] >= dp[i]) {
+                    dp[i] = dp[j] + 1;
+                    paths[i] = paths[j] + " " + arr[i] + "";
+                }
+            }
+            if (dp[i] > ans)
+                ans = dp[i];
+        }
+        for (int i = 0; i < paths.length; i++) {
+            System.out.println(paths[i] + " ");
+        }
+        System.out.println();
+        display1D(dp);
+        return ans;
+    }
+
+    public static int countOfLIS(int[] arr) {
+        int[] dp = new int[arr.length];
+        int[] ct = new int[arr.length];
+        dp[0] = 1;
+        int max_ = 0;
+        for (int i = 0; i < arr.length; i++) {
+            dp[i] = 1;
+            ct[i] = 1;
+            for (int j = i - 1; j >= 0; j--) {
+                if (arr[j] < arr[i]) {
+                    if (dp[j] >= dp[i]) { // update curr length
+                        dp[i] = dp[j] + 1;
+                        ct[i] = ct[j];
+                    } else if (dp[j] + 1 == dp[i]) { // update count
+                        ct[i] += ct[j];
+                    }
+                }
+            }
+            max_ = Math.max(max_, dp[i]);
+        }
+        int ans = 0;
+        for (int i = 0; i < arr.length; i++) {
+            if (dp[i] == max_)
+                ans += ct[i];
+        }
+        return ans;
+    }
+
+    public static int LDS_DP(int[] arr) {
+        int[] dp = new int[arr.length];
+        int ans = 1;
+        for (int i = arr.length - 1; i >= 0; i--) {
+            dp[i] = 1;
+            for (int j = i + 1; j < arr.length; j++) {
+                if (arr[j] < arr[i] && dp[j] >= dp[i]) {
+                    dp[i] = dp[j] + 1;
+                }
+            }
+            if (ans < dp[i])
+                ans = dp[i];
+        }
+        display1D(dp);
+        return ans;
+    }
+
+    public static int[] LISReturnDPForLBS(int[] arr) {
+        int[] dp = new int[arr.length];
+        int ans = 0;
+        dp[0] = 1;
+        for (int i = 1; i < arr.length; i++) {
+            dp[i] = 1;
+            for (int j = i - 1; j >= 0; j--) {
+                if (arr[j] < arr[i] && dp[j] >= dp[i]) {
+                    dp[i] = dp[j] + 1;
+                }
+            }
+            if (dp[i] > ans)
+                ans = dp[i];
+        }
+        return dp;
+    }
+
+    public static int[] LDSReturnDPForLBS(int[] arr) {
+        int[] dp = new int[arr.length];
+        int ans = 1;
+        for (int i = arr.length - 1; i >= 0; i--) {
+            dp[i] = 1;
+            for (int j = i + 1; j < arr.length; j++) {
+                if (arr[j] < arr[i] && dp[j] >= dp[i]) {
+                    dp[i] = dp[j] + 1;
+                }
+            }
+            if (ans < dp[i])
+                ans = dp[i];
+        }
+        return dp;
+    }
+
+    public static int LBS(int[] arr) {
+        int[] lis = LISReturnDPForLBS(arr);
+        int[] lds = LDSReturnDPForLBS(arr);
+        int[] dp = new int[arr.length];
+        int ans = 0;
+        for (int i = 1; i < arr.length - 1; i++) {
+            dp[i] = lis[i] + lds[i] - 1;
+            ans = Math.max(ans, dp[i]);
+        }
+        display1D(dp);
+        return ans;
+    }
+
+    public static int maxSumIncSubseq(int[] arr) {
+        int[] dp = new int[arr.length];
+        int ans = 0;
+        for (int i = 0; i < arr.length; i++) {
+            dp[i] = arr[i];
+            for (int j = i - 1; j >= 0; j--) {
+                if (arr[j] < arr[i] && dp[i] < arr[i] + dp[j]) {
+                    dp[i] = arr[i] + dp[j];
+                }
+            }
+            ans = Math.max(dp[i], ans);
+        }
+        display1D(dp);
+        return ans;
+    }
+
+    /*********************************************************************************/
+    public static int[] arrayBlockSum(int[] arr, int k) {
+        int[] sum = new int[arr.length];
+        sum[0] = arr[0];
+        for (int i = 1; i < arr.length; i++)
+            sum[i] = sum[i - 1] + arr[i];
+        display1D(sum);
+        int[] ans = new int[arr.length];
+        for (int i = 0; i < ans.length; i++) {
+            if (i + k >= arr.length && i - k - 1 < 0) {
+                ans[i] = sum[arr.length - 1];
+            } else if (i + k >= arr.length) {
+                ans[i] = sum[arr.length - 1] - sum[i - k - 1];
+            } else if (i - k - 1 < 0) {
+                ans[i] = sum[i + k];
+            } else {
+                ans[i] = sum[i + k] - sum[i - k - 1];
+            }
+        }
+        return ans;
     }
 
     // *****************************************************************/

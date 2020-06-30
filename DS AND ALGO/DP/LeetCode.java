@@ -174,4 +174,80 @@ class LeetCode {
         }
         return true;
     }
+
+    // LEETCODE
+    public boolean checkSubarraySum(int[] nums, int k) {
+        int[] dp = new int[nums.length];
+        for (int i = 1; i < nums.length; i++)
+            dp[i] = dp[i - 1] + nums[i];
+        return contArray(nums, k, dp);
+    }
+
+    public static boolean contArray(int[] nums, int k, int[] dp) {
+        for (int gap = 1; gap < nums.length; gap++) {
+            int si = 0;
+            int ei = gap;
+            while (ei < nums.length) {
+                int val = dp[ei] - dp[si] + nums[si];
+                if (val == 0 && k == 0)
+                    return true;
+                else if (k == 0) {
+                    si++;
+                    ei++;
+                    continue;
+                } else if (val % k == 0)
+                    return true;
+                si++;
+                ei++;
+
+            }
+        }
+        return false;
+    }
+    // LEETCODE DECODE 2
+
+    public int encoding(String str, int[] dp, int idx) {
+        if (str.length() == 0) {
+            return 1;
+        }
+        if (dp[idx] != 0)
+            return dp[idx];
+        long count = 0;
+        int ch = str.charAt(0) - '0';
+        if (ch == '0') {
+            count += encoding(str.substring(1), dp, idx + 1);
+        }
+        if (str.charAt(0) == '*') {
+            count = 9 * encoding(str.substring(1), dp, idx + 1);
+
+            if (str.length() > 1 && str.charAt(1) != '*') {
+                if (str.charAt(1) - '0' >= 0 && str.charAt(1) - '0' <= 6)
+                    count += 2 * encoding(str.substring(2), dp, idx + 2);
+                else
+                    count += encoding(str.substring(2), dp, idx + 2);
+            } else if (str.length() > 1 && str.charAt(1) == '*') {
+                count += 15 * encoding(str.substring(2), dp, idx + 2);
+            }
+        }
+        if (ch > 0 && ch < 10) {
+            count += encoding(str.substring(1), dp, idx + 1);
+            if (str.length() > 1 && str.charAt(1) == '*') {
+                if (ch == 1)
+                    count += 9 * encoding(str.substring(2), dp, idx + 2);
+                else if (ch == 2)
+                    count += 6 * encoding(str.substring(2), dp, idx + 2);
+
+            }
+        }
+        if (str.length() > 1 && str.charAt(1) != '*') {
+            int ch1 = str.charAt(1) - '0';
+            int num = ch * 10 + ch1;
+            if (num > 9 && num < 27) {
+                count += encoding(str.substring(2), dp, idx + 2);
+
+            }
+        }
+        dp[idx] = (int) (count % M);
+        return (int) (count % M);
+    }
 }
