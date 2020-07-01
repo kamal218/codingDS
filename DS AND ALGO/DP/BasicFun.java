@@ -156,14 +156,28 @@ class BasicFun {
         // System.out.println(countOfLIS(arr));
         // System.out.println(LDS_DP(arr));
         // System.out.println(LBS(arr));
-        int[] arr={1,101,2,3,100,4,5};
-        System.out.println(maxSumIncSubseq(arr));
+        // int[] arr = { 1, 101, 2, 3, 100, 4, 5 };
+        // System.out.println(maxSumIncSubseq(arr));
+
+        // CUT TYPE
+        // int[] mat={10,30,5,60};
+        // int[] mat = { 10, 20, 30, 40, 30 };
+        // int[][] dp = new int[mat.length][mat.length];
+        // System.out.println(MCM_memo(mat, 0, mat.length - 1, dp));
+        // System.out.println(MCM_DP(mat, dp));
+        String str = "ababbbabbababa";
+        boolean[][] isPalin = new boolean[str.length()][str.length()];
+        allPallindromicSubstring(str, isPalin);
+        int[][] dp = new int[str.length()][str.length()];
+        // System.out.println(minPallindromicCut(str, isPalin, 0, str.length() - 1,
+        // dp));
+        System.out.println(minPallindromicCut_DP(str, dp, isPalin));
 
         // MISCELLANEOUS
         // int[] arr = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
         // display1D(arrayBlockSum(arr, 2)); // sum of k elements from left and right
         // display1D(dp);
-        // display2D(dp);
+        display2D(dp);
     }
 
     public static int fib_01(int n, int[] dp) {
@@ -1106,6 +1120,75 @@ class BasicFun {
         }
         display1D(dp);
         return ans;
+    }
+
+    // ******************************************************/
+    public static int MCM_memo(int[] arr, int si, int ei, int[][] dp) {
+        if (si + 1 == ei)
+            return 0;
+        int ans = Integer.MAX_VALUE;
+        if (dp[si][ei] != 0)
+            return dp[si][ei];
+        for (int cut = si + 1; cut < ei; cut++) {
+            ans = Math.min(MCM_memo(arr, si, cut, dp) + arr[si] * arr[cut] * arr[ei] + MCM_memo(arr, cut, ei, dp), ans);
+        }
+        dp[si][ei] = ans;
+        return ans;
+    }
+
+    public static int MCM_DP(int[] arr, int[][] dp) {
+        for (int gap = 2; gap < arr.length; gap++) {
+            int si = 0;
+            int ei = gap;
+            while (ei < arr.length) {
+                int val = Integer.MAX_VALUE;
+                for (int cut = si + 1; cut < ei; cut++) {
+                    val = Math.min(val, dp[si][cut] + arr[si] * arr[cut] * arr[ei] + dp[cut][ei]);
+                }
+                dp[si][ei] = val;
+                si++;
+                ei++;
+            }
+        }
+        return dp[0][arr.length - 1];
+    }
+
+    public static int minPallindromicCut(String str, boolean[][] isPalin, int si, int ei, int[][] dp) {
+        if (isPalin[si][ei]) {
+            return 0;
+        }
+        if (dp[si][ei] != 0)
+            return dp[si][ei];
+        int ans = Integer.MAX_VALUE;
+        for (int cut = si; cut < ei; cut++) {
+            ans = Math.min(minPallindromicCut(str, isPalin, si, cut, dp)
+                    + minPallindromicCut(str, isPalin, cut + 1, ei, dp) + 1, ans);
+        }
+        dp[si][ei] = ans;
+        return ans;
+    }
+
+    public static int minPallindromicCut_DP(String str, int[][] dp, boolean[][] isPalin) {
+        for (int gap = 0; gap < str.length(); gap++) {
+            int si = 0;
+            int ei = gap;
+            while (ei < str.length()) {
+                int val = Integer.MAX_VALUE;
+                if (isPalin[si][ei]) {
+                    dp[si][ei] = 0;
+                    si++;
+                    ei++;
+                    continue;
+                }
+                for (int cut = si; cut < ei; cut++) {
+                    val = Math.min(val, dp[si][cut] + dp[cut + 1][ei] + 1);
+                }
+                dp[si][ei] = val;
+                si++;
+                ei++;
+            }
+        }
+        return dp[0][str.length() - 1];
     }
 
     /*********************************************************************************/
