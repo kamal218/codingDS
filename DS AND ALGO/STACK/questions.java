@@ -2,10 +2,9 @@ import java.util.Queue;
 import java.util.LinkedList;
 import java.util.Stack;
 import java.util.ArrayList;
-
-import org.w3c.dom.ls.LSException;
-
+import javafx.util.Pair; // for pair class 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 class question {
     public static void main(String[] args) {
@@ -23,12 +22,19 @@ class question {
         // display1D(nextGreaterOnLeft(arr));
         // display1D(nextSmallerOnRight(arr));
         // display1D(nextSmallerOnLeft(arr));
+
         // Leetcode
         // int[] arr1 = { 1, 11, -2, 25, 20 };
         // display1D(nextGreaterElement(arr1, arr));
-        int[] tar = { 2, 3, 4 };
-        buildArray(tar, tar.length);
-
+        // int[] tar = { 2, 3, 4 };
+        // buildArray(tar, tar.length);
+        // System.out.println(removeDuplicates_("abbabc"));
+        // System.out.println(removeDuplicates("deeedbbcccbdaa", 3));
+        // int[] asteroids = { 10, 2, -5 };
+        // display1D(asteroidCollision(asteroids));
+        // System.out.println(removeKdigits("100124", 2));
+        int[] arr = { 2, 1, 5, 6, 2, 3 };
+        System.out.println(largestRectangleArea(arr));
     }
 
     public static void stackUsingQueue() {
@@ -248,6 +254,147 @@ class question {
             }
 
             j++;
+        }
+        return ans;
+    }
+
+    public static String removeDuplicates_(String S) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < S.length(); i++) {
+            if (sb.length() == 0) {
+                sb.append(S.charAt(i));
+                continue;
+            }
+            if (S.charAt(i) == sb.charAt(sb.length() - 1)) {
+                sb.deleteCharAt(sb.length() - 1);
+            } else
+                sb.append(S.charAt(i));
+        }
+        return sb.toString();
+    }
+
+    public static String removeDuplicates(String s, int k) {
+        Stack<Pair<Character, Integer>> st = new Stack();
+        int ct = 0;
+        for (int i = 0; i < s.length(); i++) {
+            ct = 1;
+            if (st.size() == 0) {
+                st.push(new Pair(s.charAt(i), ct));
+                continue;
+            }
+            if (s.charAt(i) == st.peek().getKey())
+                ct += st.peek().getValue();
+            if (ct == k) {
+                while (st.size() > 0 && ct-- > 1)
+                    st.pop();
+            } else
+                st.push(new Pair(s.charAt(i), ct));
+        }
+        StringBuilder sb = new StringBuilder();
+        while (st.size() != 0) {
+            sb.append(st.pop().getKey());
+        }
+        return sb.reverse().toString();
+    }
+
+    public static int[] asteroidCollision(int[] asteroids) {
+        // if(asteroids.size()==0)
+        // {
+        // int[] arr=new int[];
+        // return arr;
+        // }
+
+        Stack<Integer> st = new Stack<>();
+        for (int i = 0; i < asteroids.length; i++) {
+            if (st.size() == 0) {
+                st.push(asteroids[i]);
+                continue;
+            }
+            if ((asteroids[i] < 0 && st.peek() > 0)) {
+                if (Math.abs(st.peek()) == Math.abs(asteroids[i])) {
+                    st.pop();
+                    continue;
+                } else if (Math.abs(st.peek()) > Math.abs(asteroids[i])) {
+                    continue;
+                } else {
+                    st.pop();
+                    i--;
+                    continue;
+                }
+            }
+            st.push(asteroids[i]);
+        }
+        int i = st.size() - 1;
+        int[] arr = new int[st.size()];
+        while (st.size() != 0) {
+            arr[i] = st.pop();
+            i--;
+        }
+        return arr;
+    }
+
+    public static String removeKdigits(String num, int k) {
+        Stack<Integer> st = new Stack();
+        for (int i = 0; i < num.length(); i++) {
+            if (k != 0 && st.size() > 0 && st.peek() > num.charAt(i) - '0') {
+                st.pop();
+                k--;
+                i--;
+            } else
+                st.push(num.charAt(i) - '0');
+        }
+        while (k > 0 && st.size() > 0) {
+            st.pop();
+            k--;
+        }
+        String ans = "";
+        while (st.size() != 0) {
+            ans = st.pop() + ans + "";
+        }
+        int i = 0;
+        while (i < ans.length() && ans.charAt(i) == '0')
+            i++;
+        if (i == ans.length())
+            return "0";
+        return ans.substring(i);
+    }
+
+    public static int largestRectangleArea(int[] h) {
+        int[] ngl = nextSmallerOnLeft_(h);
+        int[] ngr = nextSmallerOnRight_(h);
+        int ans = 0;
+        for (int i = 0; i < h.length; i++) {
+            ans = Math.max((ngr[i] - ngl[i] - 1) * h[i], ans);
+        }
+        return ans;
+    }
+
+    public static int[] nextSmallerOnRight_(int[] arr) {
+        Stack<Integer> st = new Stack();
+        int[] ans = new int[arr.length];
+        for (int i = arr.length - 1; i >= 0; i--) {
+            while (st.size() > 0 && arr[st.peek()] >= arr[i])
+                st.pop();
+            if (st.size() == 0)
+                ans[i] = arr.length;
+            else
+                ans[i] = st.peek();
+            st.push(i);
+        }
+        return ans;
+    }
+
+    public static int[] nextSmallerOnLeft_(int[] arr) {
+        Stack<Integer> st = new Stack();
+        int[] ans = new int[arr.length];
+        for (int i = 0; i < arr.length; i++) {
+            while (st.size() > 0 && arr[st.peek()] >= arr[i])
+                st.pop();
+            if (st.size() == 0)
+                ans[i] = -1;
+            else
+                ans[i] = st.peek();
+            st.push(i);
         }
         return ans;
     }
