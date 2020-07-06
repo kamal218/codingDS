@@ -55,7 +55,6 @@ public class voidType {
 
         // CRYPTO
         System.out.println(crypto());
-        
 
     }
 
@@ -417,7 +416,7 @@ public class voidType {
     public static int decode(String str) {
         int ans = 0;
         for (int i = 0; i < str.length(); i++) {
-            ans = ans*10+map[str.charAt(i) - 'a'] ;
+            ans = ans * 10 + map[str.charAt(i) - 'a'];
         }
         return ans;
     }
@@ -433,16 +432,17 @@ public class voidType {
             }
             return 0;
         }
-        int count=0,ct=0;
+        int count = 0, ct = 0;
         for (int i = 0; i < 10; i++) {
-            if((str.charAt(0)==str1.charAt(0) || str.charAt(0)==str2.charAt(0)|| str.charAt(0)==str3.charAt(0))&& ct==0){
-                ct=1;
-            i=1;
+            if ((str.charAt(0) == str1.charAt(0) || str.charAt(0) == str2.charAt(0) || str.charAt(0) == str3.charAt(0))
+                    && ct == 0) {
+                ct = 1;
+                i = 1;
             }
-            if (!isUsedNum[i]  ) {
+            if (!isUsedNum[i]) {
                 isUsedNum[i] = true;
                 map[str.charAt(0) - 'a'] = i;
-                count+=crypto_(str.substring(1));
+                count += crypto_(str.substring(1));
                 isUsedNum[i] = false;
             }
         }
@@ -461,6 +461,6 @@ public class voidType {
                 res += (char) (i + 'a');
             }
         }
-       return crypto_(res);
+        return crypto_(res);
     }
 }

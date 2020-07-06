@@ -33,8 +33,13 @@ class question {
         // int[] asteroids = { 10, 2, -5 };
         // display1D(asteroidCollision(asteroids));
         // System.out.println(removeKdigits("100124", 2));
-        int[] arr = { 2, 1, 5, 6, 2, 3 };
-        System.out.println(largestRectangleArea(arr));
+        // int[] arr = { 2, 1, 5, 6, 2, 3 };
+        // System.out.println(largestRectangleArea(arr));
+        // int[] h = { 0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1 };
+        // System.out.println(trapRainWater(h));
+        // System.out.println(trapRainWater_LessSpace(h));
+        // System.out.println(trapRainWaterPointer(h));
+        System.out.println(calculate("(1+(4+5+2)-3)+(6+8)"));
     }
 
     public static void stackUsingQueue() {
@@ -397,6 +402,114 @@ class question {
             st.push(i);
         }
         return ans;
+    }
+
+    public static int trapRainWater(int[] h) {
+        int[] lm = new int[h.length];
+        int[] rm = new int[h.length];
+        int ans = 0;
+        int lMax = Integer.MIN_VALUE;
+        int rMax = Integer.MIN_VALUE;
+        for (int i = 0; i < h.length; i++) {
+            lm[i] = Math.max(h[i], lMax);
+            lMax = lm[i];
+        }
+        for (int i = h.length - 1; i >= 0; i--) {
+            rm[i] = Math.max(h[i], rMax);
+            rMax = rm[i];
+        }
+        for (int i = 0; i < h.length; i++) {
+            ans += Math.min(lm[i], rm[i]) - h[i];
+        }
+        return ans;
+    }
+
+    public static int trapRainWater_LessSpace(int[] h) {
+        int[] rm = new int[h.length];
+        int ans = 0;
+        int lMax = Integer.MIN_VALUE;
+        int rMax = Integer.MIN_VALUE;
+        for (int i = h.length - 1; i >= 0; i--) {
+            if (rMax < h[i])
+                rMax = h[i];
+            rm[i] = rMax;
+        }
+        for (int i = 0; i < h.length; i++) {
+            if (lMax < h[i])
+                lMax = h[i];
+            ans += Math.min(lMax, rm[i]) - h[i];
+        }
+        return ans;
+    }
+
+    public static int trapRainWaterPointer(int[] h) {
+        int left = 0, right = h.length - 1;
+        int ans = 0;
+        int lMax = Integer.MIN_VALUE, rMax = Integer.MIN_VALUE;
+        while (left < right) {
+            if (h[left] < h[right]) {
+                if (lMax < h[left]) {
+                    lMax = h[left];
+                } else {
+                    ans += lMax - h[left];
+                }
+                left++;
+            } else {
+                if (rMax < h[right]) {
+                    rMax = h[right];
+                } else {
+                    ans += rMax - h[right];
+                }
+                right--;
+            }
+        }
+        return ans;
+    }
+
+    public static int calculate(String s) {
+        Stack<Integer> dig = new Stack();
+        Stack<Character> op = new Stack();
+        for (int i = 0; i < s.length(); i++) {
+            if (Character.isDigit(s.charAt(i))) {
+                int val = 0;
+                while (i < s.length() && Character.isDigit(s.charAt(i))) {
+                    val = val * 10 + s.charAt(i) - '0';
+                    i++;
+                }
+                dig.push(val);
+                i--;
+                continue;
+            }
+            if (s.charAt(i) == '(') {
+                op.push(s.charAt(i));
+            } else if (s.charAt(i) == ')') {
+                while (op.size() > 0 && op.peek() != '(') {
+                    int b = dig.pop();
+                    int a = dig.pop();
+                    dig.push(operation(a, b, op.pop()));
+                }
+                op.pop();
+            } else if (s.charAt(i) == '+' || s.charAt(i) == '-') {
+                while (op.size() > 0 && op.peek() != '(') {
+                    int b = dig.pop();
+                    int a = dig.pop();
+                    dig.push(operation(a, b, op.pop()));
+                }
+                op.push(s.charAt(i));
+            }
+        }
+        while (op.size() > 0) {
+            int b = dig.pop();
+            int a = dig.pop();
+            dig.push(operation(a, b, op.pop()));
+        }
+        return dig.peek();
+    }
+
+    public static int operation(int a, int b, char op) {
+        if (op == '+')
+            return a + b;
+        return a - b;
     }
 
     /***************************************************/
