@@ -1,5 +1,8 @@
 import java.util.Stack;
 import java.util.ArrayList;
+import java.util.Queue;
+import java.util.LinkedList;
+import java.util.List;
 
 class binaryTree {
     public static class Node {
@@ -48,6 +51,7 @@ class binaryTree {
         int[] arr = { 10, 20, 30, 40, -1, -1, 50, -1, -1, 160, -1, -1, 70, -6, 90, 100, -1, -1, -1, 110, 120, -1, -1,
                 -1, 130, -1, -1 };
         // int[] arr = { 1, -1, 2, 3, 4, -1, -1, -1, -1 };
+        // int[] arr = { 40, -8, -1, -1, -2, -1, -1 };
 
         // Node root = createBinatyTreeRec(arr);
         // System.out.println(root.toString()); // another method of display
@@ -134,7 +138,38 @@ class binaryTree {
         // System.out.println(max_sum);
         // sumNumbers(root, 0);
         // System.out.println(ans);
-        System.out.println(hasPathSum(root, 3000));
+        // System.out.println(hasPathSum(root, 3000));
+        // minHeight(root, 0);
+        // System.out.println(min_);
+        // averageOfLevels(root);
+        System.out.println(isCousin(root, 160, -6));
+
+        // ALL SOLUTIONS IN 1 FUNCTION
+        // allSol values = new allSol();
+        // allSolution(root, 100, 1, values); // level=1 for (height in terms of node)
+        // else (0 for edge)
+        // System.out.println();
+        // System.out.println("min:" + values.min);
+        // System.out.println("max:" + values.max);
+        // System.out.println("height:" + values.height);
+        // System.out.println("size:" + values.size);
+        // System.out.println("ceil:" + values.ceil);
+        // System.out.println("floor:" + values.floor);
+        // System.out.println("pred:" + values.pred.data);
+        // System.out.println("succ:" + values.succ.data);
+        // System.out.println(kThLargest(root, 3));
+
+        // TRAVERSALS IN BINARY TREE
+        // preInPostTraversal(root);
+        // levelOrderTraversel(root);
+        // levelOrderTraverselNewLine(root);
+        // levelOrderTraverselNewLine02(root);
+        // levelOrderTraverselZigZag(root);
+        // zigzagLevelOrder(root);
+        // preInPostIterative(root);
+        // Floor(root, Integer.MIN_VALUE);
+        // System.out.println(floor);
+
     }
 
     public static int minInTree(Node root) {
@@ -298,6 +333,7 @@ class binaryTree {
     public static int leafToLeaf(Node root) {
         if (root == null)
             return 0;
+
         int lMax = leafToLeaf(root.left);
         int rMax = leafToLeaf(root.right);
         if (root.left != null && root.right != null)
@@ -319,7 +355,7 @@ class binaryTree {
         sumNumbers(root.right, val * 10 + root.data);
     }
 
-    public static  boolean hasPathSum(Node root, int sum) {
+    public static boolean hasPathSum(Node root, int sum) {
         if (root == null) {
             return false;
         }
@@ -332,6 +368,320 @@ class binaryTree {
         res = res || hasPathSum(root.left, sum - root.data);
         res = res || hasPathSum(root.right, sum - root.data);
         return res;
+    }
+
+    static int min_ = Integer.MAX_VALUE;
+
+    public static void minHeight(Node root, int ht) {
+        if (root == null)
+            return;
+        if (root.left == null && root.right == null)
+            min_ = Math.min(min_, ht);
+        minHeight(root.left, ht + 1);
+        minHeight(root.right, ht + 1);
+    }
+
+    public static List<Double> averageOfLevels(Node root) {
+        Queue<Node> que = new LinkedList();
+        List<Double> ans = new ArrayList();
+        que.add(root);
+        while (que.size() != 0) {
+            int size = que.size();
+            int s = size;
+            double mid = 0;
+            while (size-- > 0) {
+                Node top = que.remove();
+                mid += top.data;
+                if (top.left != null)
+                    que.add(top.left);
+                if (top.right != null)
+                    que.add(top.right);
+            }
+            ans.add(mid / s);
+        }
+        return ans;
+    }
+
+    public static boolean isCousin(Node node, int x, int y) {
+        int l1 = 0;
+        int l2 = 0;
+        Queue<Node> que = new LinkedList();
+        que.add(node);
+        int level = 1;
+        while (que.size() != 0) {
+            int size = que.size();
+            while (size-- > 0) {
+                Node top = que.remove();
+
+                if (top.data == x)
+                    l1 = level;
+                if (top.data == y)
+                    l2 = level;
+                if (top.left != null && top.right != null && ((top.left.data == x && top.right.data == y)
+                        || (top.left.data == y && top.right.data == x))) {
+                    return false;
+                }
+                if (top.left != null)
+                    que.add(top.left);
+                if (top.right != null)
+                    que.add(top.right);
+            }
+            level++;
+            if (l1 != 0 || l2 != 0)
+                return l1 == l2;
+        }
+        return true;
+    }
+
+    public static class allSol {
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
+        int height = 0;
+        boolean find = false;
+        int size = 0;
+        int ceil = Integer.MIN_VALUE;
+        int floor = Integer.MAX_VALUE;
+        Node pred = null;
+        Node succ = null;
+        Node prev = null;
+    }
+
+    public static void allSolution(Node root, int data, int level, allSol values) {
+        if (root == null)
+            return;
+        values.size++;
+
+        values.height = Math.max(values.height, level);
+
+        values.min = Math.min(values.min, root.data);
+
+        values.max = Math.max(values.max, root.data);
+
+        values.find = values.find || root.data == data;
+
+        if (root.data > data && root.data < values.ceil)
+            values.ceil = root.data;
+
+        if (root.data < data && root.data > values.floor)
+            values.floor = root.data;
+
+        if (root.data == data && values.pred == null) {
+            values.pred = values.prev;
+        }
+
+        if (values.prev != null && values.succ == null && values.prev.data == data) {
+            values.succ = root;
+        }
+
+        values.prev = root;
+        allSolution(root.left, data, level + 1, values);
+        allSolution(root.right, data, level + 1, values);
+    }
+
+    /**********************
+     * TRAVERSALS IN A BINARY TREE
+     ********************************/
+    public static void preInPostTraversal(Node root) {
+        if (root == null)
+            return;
+        // pre area
+        System.out.println("pre:" + root.data);
+        if (root.left != null)
+            System.out.println("pre edge:" + root.data + "->" + root.left.data);
+
+        preInPostTraversal(root.left);
+
+        // in area
+        System.out.println("in:" + root.data);
+
+        preInPostTraversal(root.right);
+
+        // post area
+        if (root.right != null)
+            System.out.println("post edge:" + root.right.data + "->" + root.data);
+
+        System.out.println("post:" + root.data);
+
+    }
+
+    public static void levelOrderTraversel(Node root) {
+        Queue<Node> st = new LinkedList();
+        st.add(root);
+        // remove print push
+        while (st.size() != 0) {
+            Node top = st.remove();
+            System.out.println(top.data + "\t");
+            if (top.left != null)
+                st.add(top.left);
+            if (top.right != null)
+                st.add(top.right);
+        }
+    }
+
+    public static void levelOrderTraverselNewLine(Node root) {
+        Queue<Node> que = new LinkedList();
+        que.add(root);
+        while (que.size() != 0) {
+            int size = que.size();
+            while (size-- > 0) {
+                Node top = que.remove();
+                System.out.print(top.data + "\t");
+                if (top.left != null)
+                    que.add(top.left);
+                if (top.right != null)
+                    que.add(top.right);
+            }
+            System.out.println();
+        }
+    }
+
+    public static void levelOrderTraverselNewLine02(Node root) {
+        Queue<Node> que = new LinkedList();
+        que.add(root);
+        que.add(new Node(-1));
+        while (que.size() != 1) {
+            Node top = que.remove();
+            if (top.data == -1) {
+                System.out.println();
+                que.add(new Node(-1));
+            } else {
+                System.out.print(top.data + "\t");
+                if (top.left != null)
+                    que.add(top.left);
+                if (top.right != null)
+                    que.add(top.right);
+            }
+        }
+    }
+
+    public static void levelOrderTraverselZigZag(Node root) {
+        // we need a stack because we have to push the elements from the end of popped
+        // element
+        Stack<Node> que = new Stack();
+        Stack<Node> help = new Stack();
+        que.push(root);
+        boolean right = true;
+        while (que.size() != 0) {
+            Node top = que.pop();
+            System.out.println(top.data);
+            if (right) {
+                if (top.left != null)
+                    help.push(top.left);
+                if (top.right != null)
+                    help.push(top.right);
+
+            } else {
+                if (top.right != null)
+                    help.push(top.right);
+                if (top.left != null)
+                    help.push(top.left);
+
+            }
+            if (que.size() == 0) {
+                Stack<Node> temp = que;
+                que = help;
+                help = temp;
+                right = right == true ? false : true;
+            }
+        }
+    }
+
+    public static List<List<Integer>> zigzagLevelOrder(Node root) {
+        if (root == null)
+            return new ArrayList();
+        List<List<Integer>> ans = new ArrayList();
+        Stack<Node> que = new Stack();
+        Stack<Node> help = new Stack();
+        que.push(root);
+        List<Integer> list = new ArrayList();
+        boolean right = true;
+        while (que.size() != 0) {
+            Node top = que.pop();
+            list.add(top.data);
+
+            if (right) {
+                if (top.left != null)
+                    help.push(top.left);
+                if (top.right != null)
+                    help.push(top.right);
+
+            } else {
+                if (top.right != null)
+                    help.push(top.right);
+                if (top.left != null)
+                    help.push(top.left);
+
+            }
+            if (que.size() == 0) {
+                ans.add(new ArrayList<>(list));
+                list = new ArrayList();
+                Stack<Node> temp = que;
+                que = help;
+                help = temp;
+                right = right == true ? false : true;
+            }
+
+        }
+        return ans;
+    }
+
+    public static class traversalStatus {
+        Node node = null;
+        boolean sd = false;
+        boolean ld = false;
+        boolean rd = false;
+
+        public traversalStatus(Node node) {
+            this.node = node;
+        }
+    }
+
+    public static void preInPostIterative(Node root) {
+        Stack<traversalStatus> st = new Stack();
+        st.push(new traversalStatus(root));
+        while (st.size() != 0) {
+            traversalStatus status = st.peek();
+            if (!status.sd) {
+                status.sd = true;
+                System.out.println(status.node.data);
+            } else if (!status.ld) {
+                status.ld = true;
+                if (status.node.left != null)
+                    st.push(new traversalStatus(status.node.left));
+            } else if (!status.rd) {
+                status.rd = true;
+                if (status.node.right != null)
+                    st.push(new traversalStatus(status.node.right));
+            } else {
+                st.pop();
+            }
+        }
+    }
+
+    static int floor = Integer.MIN_VALUE;
+
+    public static void Floor(Node root, int data) {
+        if (root == null)
+            return;
+
+        if (root.data < data && root.data > floor)
+            floor = root.data;
+
+        Floor(root.left, data);
+        Floor(root.right, data);
+    }
+
+    public static int kThLargest(Node root, int k) {
+
+        int ans = Integer.MAX_VALUE;
+
+        for (int i = 0; i < k; i++) {
+
+            Floor(root, ans);
+            ans = floor;
+            floor = Integer.MIN_VALUE;
+        }
+        return ans;
     }
 
     /********************* DISPLAY FUNCTION ***********************/
