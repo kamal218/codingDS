@@ -43,15 +43,25 @@ class binaryTree {
     }
 
     public static void main(String[] args) {
-        Node root = creation();
-        basicFunc(root);
-    }
-
-    public static Node creation() {
         int[] arr = { 10, 20, 30, 40, -1, -1, 50, -1, -1, 160, -1, -1, 70, -6, 90, 100, -1, -1, -1, 110, 120, -1, -1,
                 -1, 130, -1, -1 };
         // int[] arr = { 1, -1, 2, 3, 4, -1, -1, -1, -1 };
         // int[] arr = { 40, -8, -1, -1, -2, -1, -1 };
+        // int[] arr = { 1, 2, -1, 4, -1, -1, 3, -1, -1 };
+        // int[] shape = { 1, 2, -1, 4, -1, -1, 3, -1, -1 };
+        // int[] mirror = { 1, 3, -1, -1, 2, 4, -1, -1, -1 };
+        // int[] symm = { 1, 2, -1, 4, -1, -1, 3, 6, -1, -1, -1 };
+        // int[] vSymm = { 1, 2, -1, 4, -1, -1, 2, 4, -1, -1, -1 };
+        Node root = creation(arr);
+        // idx = 0;
+        // Node root1 = creation(shape);
+        // Node root1 = creation(mirror);
+        // Node root1 = creation(symm);
+        // Node root1 = creation(vSymm);
+        basicFunc(root, null);
+    }
+
+    public static Node creation(int[] arr) {
 
         // Node root = createBinatyTreeRec(arr);
         // System.out.println(root.toString()); // another method of display
@@ -104,7 +114,7 @@ class binaryTree {
     }
 
     /****************** BASIC FUNCTIONS **************************/
-    public static void basicFunc(Node root) {
+    public static void basicFunc(Node root, Node root1) {
         // System.out.println(minInTree(root));
         // System.out.println(maxInTree(root));
         // System.out.println(sizeOfTree(root));
@@ -142,7 +152,7 @@ class binaryTree {
         // minHeight(root, 0);
         // System.out.println(min_);
         // averageOfLevels(root);
-        System.out.println(isCousin(root, 160, -6));
+        // System.out.println(isCousin(root, 160, -6));
 
         // ALL SOLUTIONS IN 1 FUNCTION
         // allSol values = new allSol();
@@ -169,6 +179,31 @@ class binaryTree {
         // preInPostIterative(root);
         // Floor(root, Integer.MIN_VALUE);
         // System.out.println(floor);
+
+        // mirror-symm types
+        // System.out.println(!isShapeSame(root, root1));
+        // System.out.println(!isMirrorShape(root, root1));
+        // System.out.println(!isSymmetric(root1, root1));
+        // System.out.println(!isSymmetricWithValues(root1, root1));
+        // Node rroot = mirrorGivenTree(root);
+        // System.out.println(rroot);
+        // System.out.println("\n\n");
+        // displayTree(rroot);
+
+        // MISC TYPES
+        // removeLeaves(root);
+        // System.out.println("\n\n");
+        // displayTree(root);
+        // System.out.println(tree2str(root));
+        // isTreeBalanced(root);
+        // System.out.println(res);
+        // Node resRoot = linearizeTree(root);
+        // System.out.println("\n\n");
+        // singleChildNode(root);
+        // ans = 0;
+        // System.out.println(findTilt(root));
+        int val = root.data;
+        System.out.println(isUnivalTree(root, val));
 
     }
 
@@ -682,6 +717,182 @@ class binaryTree {
             floor = Integer.MIN_VALUE;
         }
         return ans;
+    }
+
+    public static boolean leafSimilar(Node root1, Node root2) {
+        ans = 0;
+        leafSimilar_(root1);
+        int s1 = ans;
+        ans = 0;
+        leafSimilar_(root2);
+        int s2 = ans;
+        return s1 == s2;
+    }
+
+    public static void leafSimilar_(Node root) {
+        if (root == null)
+            return;
+        if (root.left == null && root.right == null)
+            ans = ans * 10 + root.data;
+        leafSimilar_(root.left);
+        leafSimilar_(root.right);
+    }
+
+    /*********************************************/
+    public static boolean isShapeSame(Node root1, Node root2) {
+        if (root1 == null && root2 == null)
+            return false;
+        if ((root1 == null && root2 != null) || (root1 != null && root2 == null))
+            return true;
+        boolean res = false;
+        res = res || isShapeSame(root1.left, root2.left) || isShapeSame(root1.right, root2.right);
+        return res;
+    }
+
+    public static boolean isMirrorShape(Node root1, Node root2) {
+        if (root1 == null && root2 == null)
+            return false;
+        if ((root1 == null && root2 != null) || (root1 != null && root2 == null))
+            return true;
+        boolean res = false;
+        res = res || isMirrorShape(root1.left, root2.right) || isMirrorShape(root1.right, root2.left);
+        return res;
+    }
+
+    public static boolean isSymmetric(Node root1, Node root2) {
+        if (root1 == null && root2 == null)
+            return false;
+        if ((root1 == null && root2 != null) || (root1 != null && root2 == null))
+            return true;
+        boolean res = false;
+        res = res || isSymmetric(root1.left, root2.right) || isSymmetric(root1.right, root2.left);
+        return res;
+    }
+
+    public static boolean isSymmetricWithValues(Node root1, Node root2) {
+        if (root1 == null && root2 == null)
+            return false;
+        if ((root1 == null && root2 != null) || (root1 != null && root2 == null) || (root1.data != root2.data))
+            return true;
+        boolean res = false;
+        res = res || isSymmetricWithValues(root1.left, root2.right) || isSymmetricWithValues(root1.right, root2.left);
+        return res;
+    }
+
+    public static Node mirrorGivenTree(Node root) {
+        if (root == null)
+            return null;
+        Node left = mirrorGivenTree(root.left);
+        Node right = mirrorGivenTree(root.right);
+        Node temp = left;
+        root.left = right;
+        root.right = temp;
+        return root;
+    }
+
+    /**********************************************/
+
+    public static Node removeLeaves(Node root) {
+        if (root == null)
+            return null;
+        if (root.left == null && root.right == null) // condition for leaf
+            return null;
+        root.left = removeLeaves(root.left);
+        root.right = removeLeaves(root.right);
+        return root;
+    }
+
+    public static String tree2str(Node t) {
+        if (t == null)
+            return null;
+        if (t.left == null && t.right == null)
+            return t.data + "";
+        String left = tree2str(t.left);
+        String right = tree2str(t.right);
+        left = left == null ? "" : "(" + left + ")";
+        right = right == null ? "" : "(" + right + ")";
+        return t.data + left + right;
+    }
+
+    public static int sumOfLeftLeaves(Node root) {
+        if (root == null)
+            return 0;
+        int v1 = sumOfLeftLeaves(root.left);
+        int v2 = sumOfLeftLeaves(root.right);
+        if (root.left != null && root.left.left == null && root.left.right == null)
+            return v1 + v2 + root.left.data;
+        return v1 + v2;
+    }
+
+    static boolean res = true;
+
+    public static int isTreeBalanced(Node root) {
+        if (root == null)
+            return 0;
+        int l = 0, r = 0;
+        if (res == false)
+            return 0;
+        l = isTreeBalanced(root.left);
+        r = isTreeBalanced(root.right);
+        if (Math.abs(l - r) > 1) {
+            res = false;
+        }
+        return Math.max(l, r) + 1;
+    }
+
+    public static Node linearizeTree(Node root) {
+        if (root == null)
+            return null;
+        Node left = linearizeTree(root.left);
+        Node right = linearizeTree(root.right);
+        Node tail = getTailForLinearization(left);
+        tail.left = right;
+        root.right = null;
+        return root;
+    }
+
+    public static Node getTailForLinearization(Node root) {
+        if (root == null)
+            return null;
+        if (root.left == null && root.right == null)
+            return root;
+        Node l = getTailForLinearization(root.left);
+        if (l != null)
+            return l;
+        Node r = getTailForLinearization(root.right);
+        if (r != null)
+            return r;
+        return null;
+    }
+
+    public static void singleChildNode(Node root) {
+        if (root == null)
+            return;
+        if ((root.left == null && root.right != null) || (root.right == null && root.left != null)) {
+            System.out.println(root.data);
+        }
+        singleChildNode(root.left);
+        singleChildNode(root.right);
+    }
+
+    public static int findTilt(Node root) {
+        if (root == null)
+            return 0;
+        int l = findTilt(root.left);
+        int r = findTilt(root.right);
+        ans += Math.abs(l - r);
+        return l + r + root.data;
+    }
+
+    public static boolean isUnivalTree(Node root, int val) {
+        if (root == null)
+            return true;
+        if (root.data != val)
+            return false;
+        boolean res = true;
+        res = res && isUnivalTree(root.left, val) && isUnivalTree(root.right, val);
+
+        return res;
     }
 
     /********************* DISPLAY FUNCTION ***********************/
