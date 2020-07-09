@@ -77,7 +77,7 @@ class binaryTree {
             idx++;
             return null;
         }
-        Node node = new Node(arr[idx]);
+        Node node = new Node(arr[idx]);]         
         idx++;
         node.left = createBinatyTreeRec(arr);
         node.right = createBinatyTreeRec(arr);
