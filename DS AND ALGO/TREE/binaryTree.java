@@ -77,7 +77,7 @@ class binaryTree {
             idx++;
             return null;
         }
-        Node node = new Node(arr[idx]);]         
+        Node node = new Node(arr[idx]);
         idx++;
         node.left = createBinatyTreeRec(arr);
         node.right = createBinatyTreeRec(arr);
@@ -197,13 +197,14 @@ class binaryTree {
         // System.out.println(tree2str(root));
         // isTreeBalanced(root);
         // System.out.println(res);
-        // Node resRoot = linearizeTree(root);
+        flatten(root);
+        System.out.println(root);
         // System.out.println("\n\n");
         // singleChildNode(root);
         // ans = 0;
         // System.out.println(findTilt(root));
-        int val = root.data;
-        System.out.println(isUnivalTree(root, val));
+        // int val = root.data;
+        // System.out.println(isUnivalTree(root, val));
 
     }
 
@@ -840,29 +841,37 @@ class binaryTree {
         return Math.max(l, r) + 1;
     }
 
-    public static Node linearizeTree(Node root) {
+    public static void flatten(Node root) {
         if (root == null)
-            return null;
-        Node left = linearizeTree(root.left);
-        Node right = linearizeTree(root.right);
-        Node tail = getTailForLinearization(left);
-        tail.left = right;
-        root.right = null;
-        return root;
+            return;
+        flatten(root.left);
+        flatten(root.right);
+        
+        if (root.left == null)
+            return;
+        else {
+            Node tail = getTail(root.left);
+            if (tail == null)
+                root.right = root.left;
+            else {
+                tail.right = root.right;
+                root.right = root.left;
+                root.left = null;
+            }
+            root.left = null;
+        }
+
     }
 
-    public static Node getTailForLinearization(Node root) {
-        if (root == null)
+    public static Node getTail(Node node) {
+        if (node == null)
             return null;
-        if (root.left == null && root.right == null)
-            return root;
-        Node l = getTailForLinearization(root.left);
-        if (l != null)
-            return l;
-        Node r = getTailForLinearization(root.right);
-        if (r != null)
-            return r;
-        return null;
+        if (node.left == null && node.right == null)
+            return node;
+        Node lTail = getTail(node.left);
+        if (lTail != null)
+            return lTail;
+        return getTail(node.right);
     }
 
     public static void singleChildNode(Node root) {
