@@ -23,13 +23,17 @@ public class genericTree {
         // 70, -1, -1, 100, -1, -1 };
         // int[] mirror = { 10, 100, -1, 60, 70, -1, -1, 40, 50, -6, -1, 80, -1, -1, -1,
         // 20, 30, -1, -1, -1 };
-        int[] symm = { 10, 20, 30, -1, -1, 40, 50, 80, -1, -6, -1, -1, -1, 60, 70, -1, -1, 100, 110, -1, -1, -1 };
+        // int[] symm = { 10, 20, 30, -1, -1, 40, 50, 80, -1, -6, -1, -1, -1, 60, 70,
+        // -1, -1, -1 };
+        int[] symmValue = { 10, 20, -1, 30, -1, 20, -1, -1 };
         // Node root = createGenericTreeRec(arr);
         Node root = createGenericTreeIt(arr);
         // Node root1 = createGenericTreeIt(sameshape);
         // Node root1 = createGenericTreeIt(mirror);
-        Node root1 = createGenericTreeIt(symm);
+        // Node root1 = createGenericTreeIt(symm);
+        Node root1 = createGenericTreeIt(symmValue);
         displayGenericTree(root);
+        // System.out.println();
         // displayGenericTree(root1);
         basicFunc(root, root1);
     }
@@ -135,11 +139,18 @@ public class genericTree {
 
         // mirror types issame shape/ismirrorshape/issymm/issymm with value and shape
         // System.out.println(!isSameShape(root, root1));
-        System.out.println(!isMirrorShape(root1, root1));
+        // System.out.println(!isMirrorShape(root1, root1));
         // System.out.println(!isSymmetric(root1, root1));
-        // System.out.println(isSymmetricWithValue(root, root));
+        // System.out.println(!isSymmetricWithValue(root1, root1));
+        // mirrorTree(root);
+        // displayGenericTree(root);
 
         // misc linearize + remove leaves + remove node with 1 child
+        // removeLeaves(root);
+        // removeSingleChildNode(root);
+        // displayGenericTree(root);
+        linearize(root);
+        displayGenericTree(root);
     }
 
     public static int minInTree(Node root) {
@@ -535,5 +546,70 @@ public class genericTree {
             j--;
         }
         return res;
+    }
+
+    public static boolean isSymmetricWithValue(Node root1, Node root2) {
+        boolean res = false;
+        if (root1.childrens.size() != root2.childrens.size() || (root1.data != root2.data))
+            return true;
+        int i = 0, j = root2.childrens.size() - 1;
+        while (i <= j) {
+            res = res || isSymmetricWithValue(root1.childrens.get(i), root2.childrens.get(j));
+            i++;
+            j--;
+        }
+        return res;
+    }
+
+    public static void mirrorTree(Node root) {
+        for (Node child : root.childrens) {
+            mirrorTree(child);
+        }
+        Collections.reverse(root.childrens);
+    }
+
+    public static void removeLeaves(Node root) {
+        if (root == null)
+            return;
+        for (int i = root.childrens.size() - 1; i >= 0; i--) {
+            if (root.childrens.get(i).childrens.size() == 0)
+                root.childrens.remove(i);
+        }
+        for (Node child : root.childrens)
+            removeLeaves(child);
+    }
+
+    public static void removeSingleChildNode(Node root) {
+        if (root == null)
+            return;
+        if (root.childrens.size() == 1) {
+            root.childrens.remove(0);
+        }
+        for (Node child : root.childrens)
+            removeSingleChildNode(child);
+    }
+
+    public static void linearize(Node root) {
+        for (Node child : root.childrens) {
+            linearize(child);
+        }
+        int i = root.childrens.size() - 1;
+        while (i > 0) {
+            Node lnode = root.childrens.get(i);
+            root.childrens.remove(i);
+            Node tail = getTail(root.childrens.get(i - 1));
+            tail.childrens.add(lnode);
+            i--;
+        }
+    }
+
+    public static Node getTail(Node root) {
+        if (root.childrens.size() == 0)
+            return root;
+        return getTail(root.childrens.get(0));
+    }
+
+    public static void linearize_01(Node root) {
+        
     }
 }

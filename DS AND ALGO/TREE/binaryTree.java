@@ -197,15 +197,26 @@ class binaryTree {
         // System.out.println(tree2str(root));
         // isTreeBalanced(root);
         // System.out.println(res);
-        flatten(root);
-        System.out.println(root);
+        // flatten(root);
+        // System.out.println(root);
         // System.out.println("\n\n");
         // singleChildNode(root);
         // ans = 0;
         // System.out.println(findTilt(root));
         // int val = root.data;
         // System.out.println(isUnivalTree(root, val));
+        // displayTree(mergeTrees(root, root1));
 
+        // MORE CONSTRUCTIONS
+        System.out.println("\n\n");
+        // int[] pre = { 10, 20, 30, 40, 50, 60, 70 };
+        int[] post = { 30, 40, 20, 70, 60, 50, 10 };
+        int[] in = { 30, 20, 40, 10, 70, 60, 50 };
+        // idx = 0;
+        // root = constructUsingPreAndIn(root, pre, in, 0, in.length - 1);
+        idx = post.length - 1;
+        root = constructUsingPostAndIn(null, post, in, 0, in.length - 1);
+        displayTree(root);
     }
 
     public static int minInTree(Node root) {
@@ -846,7 +857,7 @@ class binaryTree {
             return;
         flatten(root.left);
         flatten(root.right);
-        
+
         if (root.left == null)
             return;
         else {
@@ -902,6 +913,71 @@ class binaryTree {
         res = res && isUnivalTree(root.left, val) && isUnivalTree(root.right, val);
 
         return res;
+    }
+
+    public static Node mergeTrees(Node t1, Node t2) {
+        if (t1 == null || t2 == null)
+            return t1 == null ? t2 : t1;
+        Node root = new Node(t1.data + t2.data);
+        root.left = mergeTrees(t1.left, t2.left);
+        root.right = mergeTrees(t1.right, t2.right);
+        return root;
+    }
+
+    public static Node addOneRow(Node root, int v, int d) {
+        if (d == 1) {
+            Node node = new Node(v);
+            node.left = root;
+            return node;
+        }
+        addOneRow_(root, v, d - 1);
+        return root;
+    }
+
+    public static void addOneRow_(Node root, int v, int d) {
+        if (root == null)
+            return;
+        if (d == 1) {
+            Node left = new Node(v);
+            Node right = new Node(v);
+            left.left = root.left;
+            right.right = root.right;
+            root.left = left;
+            root.right = right;
+            return;
+        }
+        addOneRow_(root.left, v, d - 1);
+        addOneRow_(root.right, v, d - 1);
+    }
+
+    public static Node constructUsingPreAndIn(Node root, int[] pre, int[] in, int si, int ei) {
+        if (si > ei)
+            return null;
+        root = new Node(pre[idx]);
+        int i = -1;
+        for (i = si; i <= ei; i++) {
+            if (pre[idx] == in[i])
+                break;
+        }
+        idx++;
+        root.left = constructUsingPreAndIn(root, pre, in, si, i - 1);
+        root.right = constructUsingPreAndIn(root, pre, in, i + 1, ei);
+        return root;
+    }
+
+    public static Node constructUsingPostAndIn(Node root, int[] post, int[] in, int si, int ei) {
+        if (si > ei)
+            return null;
+        root = new Node(post[idx]);
+        int i = -1;
+        for (i = si; i <= ei; i++) {
+            if (post[idx] == in[i])
+                break;
+        }
+        idx--;
+        root.right = constructUsingPostAndIn(root, post, in, i + 1, ei);
+        root.left = constructUsingPostAndIn(root, post, in, si, i - 1);
+        return root;
     }
 
     /********************* DISPLAY FUNCTION ***********************/
