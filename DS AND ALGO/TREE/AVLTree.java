@@ -3,7 +3,7 @@ class AVL {
         int data = 0;
         Node left = null;
         Node right = null;
-        int height = 0;
+        int height = 'a' + 1;
         int balFac = 0;
 
         public Node(int data) {
@@ -20,8 +20,9 @@ class AVL {
     }
 
     public static void update(Node root) {
-        int lh = -1;
-        int rh = -1;
+        int lh = 'a'; // for general case default height of nnode should be 1 because node is not
+                      // updated during calling
+        int rh = 'a';
         if (root.left != null) {
             lh = root.left.height;
         }

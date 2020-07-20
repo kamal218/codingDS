@@ -64,6 +64,13 @@ class binarySearchTree {
         // System.out.println(isBTSartisfyBST(root, Integer.MIN_VALUE,
         // Integer.MAX_VALUE));
         // System.out.println(LCA_BST(root, root.left.left, root.left.right));
+        // balPair isBalanced = isBSTBalanced(root);
+        // System.out.println(isBalanced.isBal);
+        // isBStPair isBST = isTreeBSt(root);
+        // System.out.println(isBST.isBST);
+        larBST largestBST = largestBST(root);
+        System.out.println(largestBST.head);
+        System.out.println(largestBST.size);
     }
 
     public static Node minInBST(Node root) {
@@ -217,5 +224,78 @@ class binarySearchTree {
         root.data = sum;
         root.left = convertBST(root.left);
         return root;
+    }
+
+    /***********************************************/
+    public static class balPair {
+        boolean isBal = true;
+        int height = 0;
+    }
+
+    public static balPair isBSTBalanced(Node root) {
+        if (root == null) {
+            return new balPair();
+        }
+        balPair left = isBSTBalanced(root.left);
+        balPair right = isBSTBalanced(root.right);
+
+        balPair mp = new balPair();
+        mp.isBal = left.isBal && right.isBal && Math.abs(left.height - right.height) <= 1;
+        mp.height = Math.max(left.height, right.height) + 1;
+        return mp;
+    }
+
+    public static class isBStPair {
+        boolean isBST = true;
+        int min_ = Integer.MAX_VALUE;
+        int max_ = Integer.MIN_VALUE;
+    }
+
+    public static isBStPair isTreeBSt(Node root) {
+        if (root == null)
+            return new isBStPair();
+        isBStPair left = isTreeBSt(root.left);
+        isBStPair right = isTreeBSt(root.right);
+
+        isBStPair mp = new isBStPair();
+        mp.isBST = left.isBST && right.isBST && root.data > left.max_ && root.data < right.min_;
+        mp.max_ = Math.max(root.data, Math.max(left.max_, right.max_));
+        mp.min_ = Math.min(root.data, Math.max(left.min_, right.min_));
+        return mp;
+    }
+
+    public static class larBST {
+        boolean isBST = true;
+        int size = 0;
+        int max_ = Integer.MIN_VALUE;
+        int min_ = Integer.MAX_VALUE;
+        Node head = null;
+    }
+
+    public static larBST largestBST(Node root) {
+        if (root == null)
+            return new larBST();
+        larBST left = largestBST(root.left);
+        larBST right = largestBST(root.right);
+
+        larBST mp = new larBST();
+        mp.isBST = left.isBST && right.isBST && root.data > left.max_ && root.data < right.min_;
+        mp.max_ = Math.max(root.data, Math.max(left.max_, right.max_));
+        mp.min_ = Math.min(root.data, Math.max(left.min_, right.min_));
+
+        if (mp.isBST) { // given node makes a BST
+            mp.head = root;
+            mp.size = left.size + right.size + 1;
+        } else {
+            if (left.size > right.size) {
+                mp.head = left.head;
+                mp.size = left.size;
+            } else {
+                mp.head = right.head;
+                mp.size = right.size;
+            }
+        }
+
+        return mp;
     }
 }
