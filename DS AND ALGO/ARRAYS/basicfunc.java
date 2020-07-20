@@ -17,8 +17,8 @@ public class basicfunc {
     }
 
     public static void solve() {
-        // basicf();
-        LeetCode();
+        basicf();
+        // LeetCode();
     }
 
     /***************************************
@@ -44,16 +44,17 @@ public class basicfunc {
          */
 
         // Matrix
-
-        int[][] mat = { { 1, 2, 3 }, { 2, 3, 4 }, { 4, 5, 6 } };
+// 
+        // int[][] mat = { { 1, 2, 3 }, { 2, 3, 4 }, { 4, 5, 6 } };
+        int[][] mat={{0,0,1,0},{1,0,0,0},{0,0,0,0},{1,0,1,0}};
         // int[][] hmat = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
         // addTwoMatrix(mat, hmat);
         // transposeMatrix(mat);
         // multiplyMatrix(mat, hmat);
         // wavePrint(mat);
-        spiralPrint(mat);
+        // spiralPrint(mat);
         // int[][] mat={{0,0,0,1},{0,1,0,1},{0,0,0,0},{0,0,0,0}};
-        // display1D(exitPoint1(mat));
+        display1D(exitPoint1(mat));
         // display2D(matrix);
 
     }

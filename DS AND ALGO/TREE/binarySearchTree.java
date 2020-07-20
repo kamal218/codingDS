@@ -1,3 +1,5 @@
+import java.util.*;
+
 class binarySearchTree {
     public static class Node {
         int data = 0;
@@ -44,7 +46,7 @@ class binarySearchTree {
     }
 
     public static void basicFunc(Node root) {
-        // System.out.println("\n\n");
+        System.out.println("\n\n");
         // System.out.println("min: " + minInBST(root));
         // System.out.println("max: " + maxInBST(root));
         // System.out.println(search(root, 36));
@@ -52,8 +54,16 @@ class binarySearchTree {
         // increasingBST(root);
         // display(head);
         // trimBST(root, 30, 60);
-         root=convertBST(root);
-         display(root);
+        // root = convertBST(root);
+        // root = add(root, 25);
+        // root = removeNode(root, 50);
+        // display(root);
+        // System.out.println(ceil(root, 65)); // leftmost of right
+        // System.out.println(floor(root, 65)); // rightmost of left
+        // root.left.right.right.data=80; //condition for not a bst
+        // System.out.println(isBTSartisfyBST(root, Integer.MIN_VALUE,
+        // Integer.MAX_VALUE));
+        // System.out.println(LCA_BST(root, root.left.left, root.left.right));
     }
 
     public static Node minInBST(Node root) {
@@ -93,6 +103,81 @@ class binarySearchTree {
                 root = root.left;
         }
         return false;
+    }
+
+    public static Node add(Node root, int val) {
+        if (root == null) {
+            Node nnode = new Node(val);
+            return nnode;
+        } else if (root.data < val)
+            root.right = add(root.right, val);
+        else
+            root.left = add(root.left, val);
+        return root;
+    }
+
+    public static Node removeNode(Node root, int val) {
+        if (root == null)
+            return null;
+        if (root.data == val) {
+            if (root.left == null || root.right == null) {
+                return root.left == null ? root.right : root.left;
+            }
+            int max_ = maxInBST(root.left).data;
+            root.data = max_;
+            root.left = removeNode(root.left, max_);
+        } else if (root.data > val) {
+            root.left = removeNode(root.left, val);
+        } else {
+            root.right = removeNode(root.right, val);
+        }
+        return root;
+    }
+
+    public static int ceil(Node root, int data) {
+        if (root == null)
+            return -1;
+        if (root.data == data)
+            return data;
+        if (root.data < data) {
+            return ceil(root.right, data);
+        }
+        int c = ceil(root.left, data);
+        return c >= data ? c : root.data;
+    }
+
+    public static int floor(Node root, int data) {
+        if (root == null)
+            return -1;
+        if (root.data == data)
+            return data;
+        if (root.data > data)
+            return floor(root.left, data);
+        int f = floor(root.right, data);
+        return f <= data ? f : root.data;
+    }
+
+    public static boolean isBTSartisfyBST(Node root, int min_, int max_) { // we may also use noode instead of int
+
+        if (root == null)
+            return true;
+        if (root.data <= min_ || root.data >= max_)
+            return false;
+        return (isBTSartisfyBST(root.left, min_, root.data) && isBTSartisfyBST(root.right, root.data, max_));
+    }
+
+    public static Node LCA_BST(Node root, Node root1, Node root2) {
+        if (root == null)
+            return null;
+        if (root.data > root1.data && root.data < root2.data)
+            return root;
+        Node l = LCA_BST(root.left, root1, root2);
+        if (l != null)
+            return l;
+        Node r = LCA_BST(root.right, root1, root2);
+        if (r != null)
+            return r;
+        return null;
     }
 
     static Node ans = new Node(1);

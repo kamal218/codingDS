@@ -52,7 +52,7 @@ class binaryTree {
         // int[] mirror = { 1, 3, -1, -1, 2, 4, -1, -1, -1 };
         // int[] symm = { 1, 2, -1, 4, -1, -1, 3, 6, -1, -1, -1 };
         // int[] vSymm = { 1, 2, -1, 4, -1, -1, 2, 4, -1, -1, -1 };
-        Node root = creation(arr);        
+        Node root = creation(arr);
         // idx = 0;
         // Node root1 = creation(shape);
         // Node root1 = creation(mirror);
@@ -217,13 +217,14 @@ class binaryTree {
         // idx = post.length - 1;
         // root = constructUsingPostAndIn(null, post, in, 0, in.length - 1);
         // displayTree(root);
-        ans = 0;
-        deepestLeavesSum(root, heightOfTree(root) - 1);
-        System.out.println(ans);
+        // ans = 0;
+        // deepestLeavesSum(root, heightOfTree(root) - 1);
+        // System.out.println(ans);
 
         // VIEWS
         // rightSideView(root);
         // leftSideView(root);
+        System.out.println(isBTSartisfyBST(root, Integer.MIN_VALUE, Integer.MAX_VALUE));
     }
 
     public static int minInTree(Node root) {
@@ -1038,6 +1039,14 @@ class binaryTree {
                 p++;
             }
         }
+    }
+
+    public static boolean isBTSartisfyBST(Node root, int min_, int max_) {
+        if (root == null)
+            return true;
+        if (root.data < min_ || root.data > max_)
+            return false;
+        return (isBTSartisfyBST(root.left, min_, root.data) && isBTSartisfyBST(root.right, root.data, max_));
     }
 
     /********************* DISPLAY FUNCTION ***********************/
