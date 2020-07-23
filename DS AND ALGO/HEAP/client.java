@@ -6,6 +6,7 @@ public class client {
         myHeap.push(100);
         myHeap.pop();
         myHeap.displayHeap();
+        // heap.sort(); // works in case of static methods in heap
         myHeap.sort();
     }
 }
