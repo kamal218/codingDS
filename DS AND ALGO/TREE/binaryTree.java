@@ -996,7 +996,7 @@ class binaryTree {
         deepestLeavesSum(root.left, (height - 1));
         deepestLeavesSum(root.right, height - 1);
     }
-
+// for recursive aproach use min lavel and running level
     public static void rightSideView(Node root) {
         if (root == null)
             return;

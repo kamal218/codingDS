@@ -391,13 +391,13 @@ public class genericTree {
 
     public static void traversalsPreIt(Node root) {
         Stack<TPair> st = new Stack();
-        st.push(new TPair(root, 0));
+        st.push(new TPair(root, -1));
         while (st.size() != 0) {
             TPair top = st.peek();
-            if (top.state == 0)
+            if (top.state == -1)
                 System.out.println(top.node.data);
-            if (top.state != top.node.childrens.size()) {
-                st.push(new TPair(top.node.childrens.get(top.state), 0));
+            else if (top.state > 0 && top.state < top.node.childrens.size()) {
+                st.push(new TPair(top.node.childrens.get(top.state), -1));
                 top.state++;
             } else {
                 st.pop();
