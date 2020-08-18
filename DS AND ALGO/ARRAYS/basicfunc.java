@@ -1,17 +1,9 @@
 import java.util.Arrays;
-import java.util.Scanner;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Comparator;
 
-import javax.lang.model.util.ElementScanner6;
-
-import java.util.ArrayList;
-
 public class basicfunc {
-    public static Scanner scn = new Scanner(System.in);
-
     public static void main(String[] args) {
         solve();
     }
